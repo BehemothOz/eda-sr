@@ -1,3 +1,4 @@
+import Button from '@material-ui/core/Button';
 import logo from './logo.svg';
 import './App.css';
 
@@ -8,6 +9,7 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
+          <Button color="primary">asd</Button>
         </p>
         <a
           className="App-link"
