@@ -4,13 +4,14 @@ import './index.css';
 // import App from './App';
 
 // import { LoginPage } from './pages/Login';
-import { HomePage } from './pages/Home';
+// import { HomePage } from './pages/Home';
+import { ProfilePage } from './pages/Profile';
 
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
     <React.StrictMode>
-        <HomePage />
+        <ProfilePage />
     </React.StrictMode>,
     document.getElementById('root')
 );
