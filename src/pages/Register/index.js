@@ -1,3 +1,3 @@
 export const RegisterPage = () => {
-    return null;
+    return 'Register Page';
 };

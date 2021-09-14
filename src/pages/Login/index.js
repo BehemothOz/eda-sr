@@ -2,6 +2,7 @@ import { Children } from 'react';
 import { TextField, Paper, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useForm, Controller } from 'react-hook-form';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -36,11 +37,16 @@ const CenterScreen = props => {
 
 export const LoginPage = () => {
     const classes = useStyles();
+    const history = useHistory();
+
     const { control, handleSubmit } = useForm();
 
-    const onSubmit = data => console.log('form data after submit: ', data);
+    const onSubmit = data => {
+        console.log('form data after submit: ', data);
+        history.push('/');
+    };
 
-    console.count('Render:LoginPage');
+    // console.count('Render:LoginPage'); - count 2
 
     return (
         <CenterScreen>
@@ -50,17 +56,50 @@ export const LoginPage = () => {
                         name="login"
                         control={control}
                         defaultValue=""
-                        render={({ field }) => <TextField label="Login" fullWidth style={{ marginBottom: 8 }} {...field} />}
+                        render={({ field }) => (
+                            <TextField
+                                label="Login"
+                                fullWidth
+                                required
+                                error={false}
+                                style={{ marginBottom: 8 }}
+                                inputProps={{
+                                    autoComplete: 'new-password',
+                                    form: {
+                                        autoComplete: 'off',
+                                    },
+                                }}
+                                {...field}
+                            />
+                        )}
                     />
                     <Controller
                         name="password"
                         control={control}
                         defaultValue=""
-                        render={({ field }) => <TextField type="password" label="Password" fullWidth style={{ marginBottom: 8 * 2 }} {...field} />}
+                        render={({ field }) => (
+                            <TextField
+                                type="password"
+                                label="Password"
+                                fullWidth
+                                required
+                                error={false}
+                                style={{ marginBottom: 8 * 2 }}
+                                {...field}
+                            />
+                        )}
                     />
-                    <Button variant="contained" color="primary" type="submit">
-                        Send
-                    </Button>
+                    <div style={{ display: 'flex' }}>
+                        <Button variant="contained" color="primary" type="submit" style={{ marginRight: 8 }}>
+                            Send
+                        </Button>
+                        <Button variant="contained" color="secondary" to="/register" component={RouterLink}>
+                            Register
+                        </Button>
+                        <Button color="primary" to="/password" component={RouterLink} style={{ marginLeft: 'auto' }}>
+                            Password
+                        </Button>
+                    </div>
                 </form>
             </Paper>
         </CenterScreen>

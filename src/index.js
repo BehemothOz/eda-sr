@@ -1,17 +1,39 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
 import './index.css';
 // import App from './App';
 
-// import { LoginPage } from './pages/Login';
-// import { HomePage } from './pages/Home';
+import { LoginPage } from './pages/Login';
+import { RegisterPage } from './pages/Register';
+import { PasswordPage } from './pages/Password';
+import { HomePage } from './pages/Home';
 import { ProfilePage } from './pages/Profile';
 
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
     <React.StrictMode>
-        <ProfilePage />
+        <Router>
+            <Switch>
+                <Route exact path="/">
+                    <HomePage />
+                </Route>
+                <Route path="/profile">
+                    <ProfilePage />
+                </Route>
+                <Route path="/login">
+                    <LoginPage />
+                </Route>
+                <Route exact path="/register">
+                    <RegisterPage />
+                </Route>
+                <Route exact path="/password">
+                    <PasswordPage />
+                </Route>
+            </Switch>
+        </Router>
     </React.StrictMode>,
     document.getElementById('root')
 );
