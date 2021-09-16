@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -8,6 +8,8 @@ import Avatar from '@material-ui/core/Avatar';
 import ImageIcon from '@material-ui/icons/Image';
 import WorkIcon from '@material-ui/icons/Work';
 import BeachAccessIcon from '@material-ui/icons/BeachAccess';
+import Container from '@material-ui/core/Container';
+import Drawer from '@material-ui/core/Drawer';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,10 +17,12 @@ import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Typography from '@material-ui/core/Typography';
 
+import { TaskForm } from '../../components/TaskForm'
+
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
-        maxWidth: 360,
+        maxWidth: '100%',
         backgroundColor: theme.palette.background.paper,
     },
     title: {
@@ -34,6 +38,11 @@ const data = [
 
 export default function FolderList() {
     const classes = useStyles();
+    const [visible, setVisible] = useState();
+
+    const toggleDrawer = () => {
+        setVisible(prev => !prev)
+    }
 
     return (
         <>
@@ -54,21 +63,29 @@ export default function FolderList() {
                     </IconButton>
                 </Toolbar>
             </AppBar>
+
             <div style={{ height: 32 }} />
-            <List className={classes.root}>
-                {data.map(dataItem => {
-                    return (
-                        <ListItem key={dataItem.id}>
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <ImageIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary={dataItem.name} secondary={dataItem.date} />
-                        </ListItem>
-                    );
-                })}
-            </List>
+
+            <Container maxWidth="md">
+                <List className={classes.root}>
+                    {data.map(dataItem => {
+                        return (
+                            <ListItem key={dataItem.id} onClick={toggleDrawer} style={{ cursor: 'pointer' }}>
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <ImageIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary={dataItem.name} secondary={dataItem.date} />
+                            </ListItem>
+                        );
+                    })}
+                </List>
+            </Container>
+
+            <Drawer open={visible} onClose={toggleDrawer}>
+                <TaskForm />
+            </Drawer>
         </>
     );
 }

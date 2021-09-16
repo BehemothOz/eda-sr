@@ -53,7 +53,7 @@ export const ProfilePage = () => {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            
+
             <div style={{ padding: 16 }}>
                 <Paper className={classes.paper}>
                     <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
@@ -61,25 +61,33 @@ export const ProfilePage = () => {
                             name="firstName"
                             control={control}
                             defaultValue=""
-                            render={({ field }) => <TextField label="First name" fullWidth style={{ marginBottom: 8 * 2 }} {...field} />}
+                            render={({ field }) => (
+                                <TextField label="First name" fullWidth style={{ marginBottom: 8 * 2 }} {...field} />
+                            )}
                         />
                         <Controller
                             name="lastName"
                             control={control}
                             defaultValue=""
-                            render={({ field }) => <TextField label="Last name" fullWidth style={{ marginBottom: 8 * 2 }} {...field} />}
+                            render={({ field }) => (
+                                <TextField label="Last name" fullWidth style={{ marginBottom: 8 * 2 }} {...field} />
+                            )}
                         />
                         <Controller
                             name="q"
                             control={control}
                             defaultValue=""
-                            render={({ field }) => <TextField label="Secret Q" fullWidth style={{ marginBottom: 8 * 2 }} {...field} />}
+                            render={({ field }) => (
+                                <TextField label="Secret Q" fullWidth style={{ marginBottom: 8 * 2 }} {...field} />
+                            )}
                         />
                         <Controller
                             name="a"
                             control={control}
                             defaultValue=""
-                            render={({ field }) => <TextField label="Secret A" fullWidth style={{ marginBottom: 8 * 2 }} {...field} />}
+                            render={({ field }) => (
+                                <TextField label="Secret A" fullWidth style={{ marginBottom: 8 * 2 }} {...field} />
+                            )}
                         />
                         {/* <Button variant="contained" color="primary" type="submit">
                             Send

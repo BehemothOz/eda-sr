@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 import './index.css';
 // import App from './App';
@@ -15,25 +17,27 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
     <React.StrictMode>
-        <Router>
-            <Switch>
-                <Route exact path="/">
-                    <HomePage />
-                </Route>
-                <Route path="/profile">
-                    <ProfilePage />
-                </Route>
-                <Route path="/login">
-                    <LoginPage />
-                </Route>
-                <Route exact path="/register">
-                    <RegisterPage />
-                </Route>
-                <Route exact path="/password">
-                    <PasswordPage />
-                </Route>
-            </Switch>
-        </Router>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <Router>
+                <Switch>
+                    <Route exact path="/">
+                        <HomePage />
+                    </Route>
+                    <Route path="/profile">
+                        <ProfilePage />
+                    </Route>
+                    <Route path="/login">
+                        <LoginPage />
+                    </Route>
+                    <Route exact path="/register">
+                        <RegisterPage />
+                    </Route>
+                    <Route exact path="/password">
+                        <PasswordPage />
+                    </Route>
+                </Switch>
+            </Router>
+        </MuiPickersUtilsProvider>
     </React.StrictMode>,
     document.getElementById('root')
 );
