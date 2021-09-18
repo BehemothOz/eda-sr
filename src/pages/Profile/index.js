@@ -1,32 +1,31 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import Typography from '@material-ui/core/Typography';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Typography from '@mui/material/Typography';
 
-import { TextField, Paper, Button } from '@material-ui/core';
+import { TextField, Paper, Button } from '@mui/material';
 
 import { useForm, Controller } from 'react-hook-form';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        width: '100%',
-        maxWidth: 360,
-        backgroundColor: theme.palette.background.paper,
-    },
-    title: {
-        flexGrow: 1,
-    },
-    paper: {
-        padding: theme.spacing(2),
-    },
-}));
+// const useStyles = makeStyles(theme => ({
+//     root: {
+//         width: '100%',
+//         maxWidth: 360,
+//         backgroundColor: theme.palette.background.paper,
+//     },
+//     title: {
+//         flexGrow: 1,
+//     },
+//     paper: {
+//         padding: theme.spacing(2),
+//     },
+// }));
 
 export const ProfilePage = () => {
-    const classes = useStyles();
+    const classes = {};
 
     const { control, handleSubmit } = useForm();
 

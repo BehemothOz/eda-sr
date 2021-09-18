@@ -1,34 +1,32 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import ImageIcon from '@material-ui/icons/Image';
-import WorkIcon from '@material-ui/icons/Work';
-import BeachAccessIcon from '@material-ui/icons/BeachAccess';
-import Container from '@material-ui/core/Container';
-import Drawer from '@material-ui/core/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import Container from '@mui/material/Container';
+import Drawer from '@mui/material/Drawer';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import Typography from '@material-ui/core/Typography';
+import ImageIcon from '@mui/icons-material/Image';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 
 import { TaskForm } from '../../components/TaskForm'
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        width: '100%',
-        maxWidth: '100%',
-        backgroundColor: theme.palette.background.paper,
-    },
-    title: {
-        flexGrow: 1,
-    },
-}));
+// const useStyles = makeStyles(theme => ({
+//     root: {
+//         width: '100%',
+//         maxWidth: '100%',
+//         backgroundColor: theme.palette.background.paper,
+//     },
+//     title: {
+//         flexGrow: 1,
+//     },
+// }));
 
 const data = [
     { id: 1, name: 'Name 1', date: 'Jan 9, 2014' },
@@ -37,7 +35,7 @@ const data = [
 ];
 
 export default function FolderList() {
-    const classes = useStyles();
+    const classes = {};
     const [visible, setVisible] = useState();
 
     const toggleDrawer = () => {

@@ -1,16 +1,14 @@
 import { Children } from 'react';
-import { TextField, Paper, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { TextField, Paper, Button } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
-import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 
-const useStyles = makeStyles(theme => ({
-    paper: {
-        padding: theme.spacing(2),
-    },
-    input: {},
-}));
+// const useStyles = makeStyles(theme => ({
+//     paper: {
+//         padding: theme.spacing(2),
+//     },
+//     input: {},
+// }));
 
 /*
     название задачи
@@ -22,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 */
 
 export const TaskForm = () => {
-    const classes = useStyles();
+    const classes = {};
     const history = useHistory();
 
     const { control, handleSubmit } = useForm();

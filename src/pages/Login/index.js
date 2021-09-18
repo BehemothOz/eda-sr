@@ -1,15 +1,15 @@
 import { Children } from 'react';
-import { TextField, Paper, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { TextField, Paper, Button } from '@mui/material';
+// import { makeStyles } from '@material-ui/core/styles';
 import { useForm, Controller } from 'react-hook-form';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 
-const useStyles = makeStyles(theme => ({
-    paper: {
-        padding: theme.spacing(2),
-    },
-    input: {},
-}));
+// const useStyles = makeStyles(theme => ({
+//     paper: {
+//         padding: theme.spacing(2),
+//     },
+//     input: {},
+// }));
 
 const CenterScreen = props => {
     const { children } = props;
@@ -36,7 +36,7 @@ const CenterScreen = props => {
 };
 
 export const LoginPage = () => {
-    const classes = useStyles();
+    const classes = {};
     const history = useHistory();
 
     const { control, handleSubmit } = useForm();

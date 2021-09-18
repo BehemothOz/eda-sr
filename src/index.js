@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 import './index.css';
 // import App from './App';
@@ -17,7 +18,7 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
     <React.StrictMode>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
             <Router>
                 <Switch>
                     <Route exact path="/">
@@ -37,7 +38,7 @@ ReactDOM.render(
                     </Route>
                 </Switch>
             </Router>
-        </MuiPickersUtilsProvider>
+        </LocalizationProvider>
     </React.StrictMode>,
     document.getElementById('root')
 );
