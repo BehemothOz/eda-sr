@@ -10,10 +10,14 @@ import Stack from '@mui/material/Stack';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
 import { CardActionArea } from '@mui/material';
 
+import { SearchInput } from '../../shared/SearchInput'
 import { TaskForm } from '../../components/TaskForm';
 
 const data = [
@@ -22,7 +26,6 @@ const data = [
 ];
 
 export default function FolderList() {
-    const classes = {};
     const [visible, setVisible] = useState();
 
     const toggleDrawer = () => {
@@ -33,7 +36,7 @@ export default function FolderList() {
         <>
             <AppBar position="static">
                 <Toolbar>
-                    <Typography variant="h6" className={classes.title}>
+                    <Typography variant="h6">
                         Some title
                     </Typography>
 
@@ -49,9 +52,12 @@ export default function FolderList() {
                 </Toolbar>
             </AppBar>
 
-            <div style={{ height: 32 }} />
+            <div style={{ display: 'flex', justifyContent: 'end', padding: 16, backgroundColor: '#e8e8e8' }}>
+                <Button variant="contained" style={{ marginRight: 16 }} onClick={toggleDrawer}>Create</Button>
+                <SearchInput />
+            </div>
 
-            <Container maxWidth="xs">
+            <Container maxWidth="xs" style={{ paddingTop: 16, paddingBottom: 16}}>
                 <Stack spacing={1}>
                     {data.map(dataItem => {
                         const { id, title } = dataItem;
