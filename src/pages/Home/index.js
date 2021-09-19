@@ -1,37 +1,24 @@
 import React, { useState } from 'react';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
 import Container from '@mui/material/Container';
 import Drawer from '@mui/material/Drawer';
-
-import ImageIcon from '@mui/icons-material/Image';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 
-import { TaskForm } from '../../components/TaskForm'
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
-// const useStyles = makeStyles(theme => ({
-//     root: {
-//         width: '100%',
-//         maxWidth: '100%',
-//         backgroundColor: theme.palette.background.paper,
-//     },
-//     title: {
-//         flexGrow: 1,
-//     },
-// }));
+import AccountCircle from '@mui/icons-material/AccountCircle';
+
+import { CardActionArea } from '@mui/material';
+
+import { TaskForm } from '../../components/TaskForm';
 
 const data = [
-    { id: 1, name: 'Name 1', date: 'Jan 9, 2014' },
-    { id: 2, name: 'Name 2', date: 'Jan 9, 2014' },
-    { id: 3, name: 'Name 3', date: 'Jan 9, 2014' },
+    { id: 1, title: 'Cook pasta with chicken', date: 'Jan 9, 2014' },
+    { id: 2, title: 'Go to the store for glasses', date: 'Jan 9, 2014' },
 ];
 
 export default function FolderList() {
@@ -39,8 +26,8 @@ export default function FolderList() {
     const [visible, setVisible] = useState();
 
     const toggleDrawer = () => {
-        setVisible(prev => !prev)
-    }
+        setVisible(prev => !prev);
+    };
 
     return (
         <>
@@ -64,21 +51,27 @@ export default function FolderList() {
 
             <div style={{ height: 32 }} />
 
-            <Container maxWidth="md">
-                <List className={classes.root}>
+            <Container maxWidth="xs">
+                <Stack spacing={1}>
                     {data.map(dataItem => {
+                        const { id, title } = dataItem;
+
                         return (
-                            <ListItem key={dataItem.id} onClick={toggleDrawer} style={{ cursor: 'pointer' }}>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <ImageIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary={dataItem.name} secondary={dataItem.date} />
-                            </ListItem>
+                            <Card key={id} onClick={toggleDrawer}>
+                                <CardActionArea>
+                                    <CardContent>
+                                        <Typography gutterBottom variant="h6" component="div">
+                                            {title}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            from 12 to 21
+                                        </Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
                         );
                     })}
-                </List>
+                </Stack>
             </Container>
 
             <Drawer open={visible} onClose={toggleDrawer}>
