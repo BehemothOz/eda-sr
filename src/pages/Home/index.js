@@ -1,54 +1,42 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import ImageIcon from '@material-ui/icons/Image';
-import WorkIcon from '@material-ui/icons/Work';
-import BeachAccessIcon from '@material-ui/icons/BeachAccess';
-import Container from '@material-ui/core/Container';
-import Drawer from '@material-ui/core/Drawer';
+import Container from '@mui/material/Container';
+import Drawer from '@mui/material/Drawer';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import Typography from '@material-ui/core/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
-import { TaskForm } from '../../components/TaskForm'
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        width: '100%',
-        maxWidth: '100%',
-        backgroundColor: theme.palette.background.paper,
-    },
-    title: {
-        flexGrow: 1,
-    },
-}));
+import AccountCircle from '@mui/icons-material/AccountCircle';
+
+import { CardActionArea } from '@mui/material';
+
+import { SearchInput } from '../../shared/SearchInput'
+import { TaskForm } from '../../components/TaskForm';
 
 const data = [
-    { id: 1, name: 'Name 1', date: 'Jan 9, 2014' },
-    { id: 2, name: 'Name 2', date: 'Jan 9, 2014' },
-    { id: 3, name: 'Name 3', date: 'Jan 9, 2014' },
+    { id: 1, title: 'Cook pasta with chicken', date: 'Jan 9, 2014' },
+    { id: 2, title: 'Go to the store for glasses', date: 'Jan 9, 2014' },
 ];
 
 export default function FolderList() {
-    const classes = useStyles();
     const [visible, setVisible] = useState();
 
     const toggleDrawer = () => {
-        setVisible(prev => !prev)
-    }
+        setVisible(prev => !prev);
+    };
 
     return (
         <>
             <AppBar position="static">
                 <Toolbar>
-                    <Typography variant="h6" className={classes.title}>
+                    <Typography variant="h6">
                         Some title
                     </Typography>
 
@@ -64,23 +52,32 @@ export default function FolderList() {
                 </Toolbar>
             </AppBar>
 
-            <div style={{ height: 32 }} />
+            <div style={{ display: 'flex', justifyContent: 'end', padding: 16, backgroundColor: '#e8e8e8' }}>
+                <Button variant="contained" style={{ marginRight: 16 }} onClick={toggleDrawer}>Create</Button>
+                <SearchInput />
+            </div>
 
-            <Container maxWidth="md">
-                <List className={classes.root}>
+            <Container maxWidth="xs" style={{ paddingTop: 16, paddingBottom: 16}}>
+                <Stack spacing={1}>
                     {data.map(dataItem => {
+                        const { id, title } = dataItem;
+
                         return (
-                            <ListItem key={dataItem.id} onClick={toggleDrawer} style={{ cursor: 'pointer' }}>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <ImageIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary={dataItem.name} secondary={dataItem.date} />
-                            </ListItem>
+                            <Card key={id} onClick={toggleDrawer}>
+                                <CardActionArea>
+                                    <CardContent>
+                                        <Typography gutterBottom variant="h6" component="div">
+                                            {title}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            from 12 to 21
+                                        </Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
                         );
                     })}
-                </List>
+                </Stack>
             </Container>
 
             <Drawer open={visible} onClose={toggleDrawer}>
