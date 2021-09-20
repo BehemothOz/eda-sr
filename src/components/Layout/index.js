@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
 
 export const Layout = props => {
     const { children } = props;
@@ -19,7 +19,7 @@ export const Layout = props => {
         <>
             <AppBar position="static">
                 <Toolbar>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    <Typography to="/" component={RouterLink} variant="h6" sx={{ flexGrow: 1, textDecoration: 'none' }} color="white">
                         Some title
                     </Typography>
 

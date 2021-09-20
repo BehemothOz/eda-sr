@@ -1,23 +1,8 @@
 import React, { useState } from 'react';
-import Container from '@mui/material/Container';
-import Drawer from '@mui/material/Drawer';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
+import { Container, Drawer, Typography, Stack, Card, CardContent, Button, CardActionArea } from '@mui/material';
 
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-
-import AccountCircle from '@mui/icons-material/AccountCircle';
-
-import { CardActionArea } from '@mui/material';
-
-import { SearchInput } from '../../shared/SearchInput'
+import { Layout } from '../../components/Layout';
+import { SearchInput } from '../../shared/SearchInput';
 import { TaskForm } from '../../components/TaskForm';
 
 const data = [
@@ -25,7 +10,7 @@ const data = [
     { id: 2, title: 'Go to the store for glasses', date: 'Jan 9, 2014' },
 ];
 
-export default function FolderList() {
+export const HomePage = () => {
     const [visible, setVisible] = useState();
 
     const toggleDrawer = () => {
@@ -33,31 +18,15 @@ export default function FolderList() {
     };
 
     return (
-        <>
-            <AppBar position="static">
-                <Toolbar>
-                    <Typography variant="h6">
-                        Some title
-                    </Typography>
-
-                    <IconButton
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        onClick={() => {}}
-                        color="inherit"
-                    >
-                        <AccountCircle />
-                    </IconButton>
-                </Toolbar>
-            </AppBar>
-
+        <Layout>
             <div style={{ display: 'flex', justifyContent: 'end', padding: 16, backgroundColor: '#e8e8e8' }}>
-                <Button variant="contained" style={{ marginRight: 16 }} onClick={toggleDrawer}>Create</Button>
+                <Button variant="contained" style={{ marginRight: 16 }} onClick={toggleDrawer}>
+                    Create
+                </Button>
                 <SearchInput />
             </div>
 
-            <Container maxWidth="xs" style={{ paddingTop: 16, paddingBottom: 16}}>
+            <Container maxWidth="xs" style={{ paddingTop: 16, paddingBottom: 16 }}>
                 <Stack spacing={1}>
                     {data.map(dataItem => {
                         const { id, title } = dataItem;
@@ -83,10 +52,6 @@ export default function FolderList() {
             <Drawer open={visible} onClose={toggleDrawer}>
                 <TaskForm />
             </Drawer>
-        </>
+        </Layout>
     );
-}
-
-export const HomePage = () => {
-    return <FolderList />;
 };
