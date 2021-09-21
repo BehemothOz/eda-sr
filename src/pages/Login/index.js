@@ -3,15 +3,20 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { TextField, Paper, Button, Stack, Typography } from '@mui/material';
 
 import { CenterScreen } from '../../components/CenterScreen';
+import { api } from '../../api'
 
 export const LoginPage = () => {
     const history = useHistory();
 
     const { control, handleSubmit } = useForm();
 
-    const onSubmit = data => {
+    const onSubmit = async data => {
         console.log('form data after submit: ', data);
-        history.push('/');
+        const result = await api.auth();
+
+        if (result.token) {
+            history.push('/');
+        }
     };
 
     return (
