@@ -81,10 +81,7 @@ export const TaskForm = () => {
                         defaultValue=""
                         render={({ field }) => (
                             <>
-                                <Select
-                                    label="Type"
-                                    {...field}
-                                >
+                                <Select label="Type" {...field}>
                                     <MenuItem value="">
                                         <em>None</em>
                                     </MenuItem>

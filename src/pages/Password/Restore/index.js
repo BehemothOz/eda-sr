@@ -2,41 +2,35 @@ import { useForm, Controller } from 'react-hook-form';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { TextField, Paper, Button, Stack, Typography } from '@mui/material';
 
-import { CenterScreen } from '../../components/CenterScreen';
-import { api } from '../../api';
+import { CenterScreen } from '../../../components/CenterScreen';
 
-export const LoginPage = () => {
+export const RestorePasswordPage = () => {
     const history = useHistory();
 
     const { control, handleSubmit } = useForm();
 
-    const onSubmit = async data => {
+    const onSubmit = data => {
         console.log('form data after submit: ', data);
-        const result = await api.auth();
-
-        if (result.token) {
-            history.push('/');
-        }
+        history.push('/login');
     };
 
     return (
         <CenterScreen>
             <Paper sx={{ width: '100%', p: 2 }}>
                 <Typography gutterBottom variant="h6" sx={{ color: 'text.secondary' }}>
-                    Login
+                    New Password
                 </Typography>
                 <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
                     <Stack spacing={2}>
                         <Controller
-                            name="login"
+                            name="newPassword"
                             control={control}
                             defaultValue=""
                             render={({ field }) => (
                                 <TextField
-                                    label="Login"
+                                    label="Password"
+                                    type="password"
                                     fullWidth
-                                    required
-                                    error={false}
                                     inputProps={{
                                         autoComplete: 'new-password',
                                         form: {
@@ -47,35 +41,12 @@ export const LoginPage = () => {
                                 />
                             )}
                         />
-                        <Controller
-                            name="password"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                                <TextField
-                                    type="password"
-                                    label="Password"
-                                    fullWidth
-                                    required
-                                    error={false}
-                                    {...field}
-                                />
-                            )}
-                        />
                         <Stack spacing={1} direction="row">
                             <Button variant="contained" color="primary" type="submit">
                                 Send
                             </Button>
-                            <Button variant="contained" color="secondary" to="/register" component={RouterLink}>
-                                Register
-                            </Button>
-                            <Button
-                                color="primary"
-                                to="/password"
-                                component={RouterLink}
-                                style={{ marginLeft: 'auto' }}
-                            >
-                                Password
+                            <Button color="primary" to="/login" component={RouterLink} style={{ marginLeft: 'auto' }}>
+                                login
                             </Button>
                         </Stack>
                     </Stack>

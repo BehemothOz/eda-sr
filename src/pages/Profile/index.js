@@ -1,99 +1,69 @@
 import React from 'react';
-
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Typography from '@mui/material/Typography';
-
-import { TextField, Paper, Button } from '@mui/material';
-
 import { useForm, Controller } from 'react-hook-form';
+import { TextField, Paper, Container, Stack, Button } from '@mui/material';
 
-// const useStyles = makeStyles(theme => ({
-//     root: {
-//         width: '100%',
-//         maxWidth: 360,
-//         backgroundColor: theme.palette.background.paper,
-//     },
-//     title: {
-//         flexGrow: 1,
-//     },
-//     paper: {
-//         padding: theme.spacing(2),
-//     },
-// }));
+import { Layout } from '../../components/Layout';
+
+const Upload = () => {
+    return <div style={{ width: 100, height: 100, backgroundColor: '#5c8ae85c' }}></div>;
+};
 
 export const ProfilePage = () => {
-    const classes = {};
-
     const { control, handleSubmit } = useForm();
 
     const onSubmit = data => console.log('form data after submit: ', data);
 
-    console.count('Render:ProfilePage');
-
     return (
-        <>
-            <AppBar position="static">
-                <Toolbar>
-                    <Typography variant="h6" className={classes.title}>
-                        Some title
-                    </Typography>
-
-                    <IconButton
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        onClick={() => {}}
-                        color="inherit"
-                    >
-                        <AccountCircle />
-                    </IconButton>
-                </Toolbar>
-            </AppBar>
-
-            <div style={{ padding: 16 }}>
-                <Paper className={classes.paper}>
+        <Layout>
+            <Container maxWidth="xs" sx={{ p: 2 }}>
+                <Paper sx={{ p: 2 }}>
                     <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
-                        <Controller
-                            name="firstName"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                                <TextField label="First name" fullWidth style={{ marginBottom: 8 * 2 }} {...field} />
-                            )}
-                        />
-                        <Controller
-                            name="lastName"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                                <TextField label="Last name" fullWidth style={{ marginBottom: 8 * 2 }} {...field} />
-                            )}
-                        />
-                        <Controller
-                            name="q"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                                <TextField label="Secret Q" fullWidth style={{ marginBottom: 8 * 2 }} {...field} />
-                            )}
-                        />
-                        <Controller
-                            name="a"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                                <TextField label="Secret A" fullWidth style={{ marginBottom: 8 * 2 }} {...field} />
-                            )}
-                        />
-                        {/* <Button variant="contained" color="primary" type="submit">
-                            Send
-                        </Button> */}
+                        <Stack spacing={2}>
+                            <Upload />
+                            <Controller
+                                name="firstName"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <TextField label="First name" size="small" fullWidth {...field} />
+                                )}
+                            />
+                            <Controller
+                                name="middleName"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <TextField label="Middle name" size="small" fullWidth {...field} />
+                                )}
+                            />
+                            <Controller
+                                name="lastName"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <TextField label="Last name" size="small" fullWidth {...field} />
+                                )}
+                            />
+                            <Controller
+                                name="q"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => <TextField label="Secret Q" size="small" fullWidth {...field} />}
+                            />
+                            <Controller
+                                name="a"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => <TextField label="Secret A" size="small" fullWidth {...field} />}
+                            />
+
+                            <Button variant="contained" color="primary" type="submit">
+                                Save
+                            </Button>
+                        </Stack>
                     </form>
                 </Paper>
-            </div>
-        </>
+            </Container>
+        </Layout>
     );
 };
