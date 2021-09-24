@@ -11,6 +11,8 @@ import './index.css';
 import { LoginPage } from './pages/Login';
 import { RegisterPage } from './pages/Register';
 import { PasswordPage } from './pages/Password';
+import { SecretPasswordPage } from './pages/Password/Secret';
+import { RestorePasswordPage } from './pages/Password/Restore';
 import { HomePage } from './pages/Home';
 import { ProfilePage } from './pages/Profile';
 
@@ -35,6 +37,12 @@ ReactDOM.render(
                     </Route>
                     <Route exact path="/password">
                         <PasswordPage />
+                    </Route>
+                    <Route exact path="/password/secret">
+                        <SecretPasswordPage />
+                    </Route>
+                    <Route exact path="/password/restore">
+                        <RestorePasswordPage />
                     </Route>
                 </Switch>
             </Router>

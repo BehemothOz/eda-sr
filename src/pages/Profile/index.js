@@ -5,8 +5,8 @@ import { TextField, Paper, Container, Stack, Button } from '@mui/material';
 import { Layout } from '../../components/Layout';
 
 const Upload = () => {
-    return <div style={{ width: 100, height: 100, backgroundColor: '#5c8ae85c' }}></div>
-}
+    return <div style={{ width: 100, height: 100, backgroundColor: '#5c8ae85c' }}></div>;
+};
 
 export const ProfilePage = () => {
     const { control, handleSubmit } = useForm();
@@ -56,10 +56,10 @@ export const ProfilePage = () => {
                                 defaultValue=""
                                 render={({ field }) => <TextField label="Secret A" size="small" fullWidth {...field} />}
                             />
-                        
-                        <Button variant="contained" color="primary" type="submit">
-                            Save
-                        </Button>
+
+                            <Button variant="contained" color="primary" type="submit">
+                                Save
+                            </Button>
                         </Stack>
                     </form>
                 </Paper>

@@ -19,7 +19,13 @@ export const Layout = props => {
         <>
             <AppBar position="static">
                 <Toolbar>
-                    <Typography to="/" component={RouterLink} variant="h6" sx={{ flexGrow: 1, textDecoration: 'none' }} color="white">
+                    <Typography
+                        to="/"
+                        component={RouterLink}
+                        variant="h6"
+                        sx={{ flexGrow: 1, textDecoration: 'none' }}
+                        color="white"
+                    >
                         Some title
                     </Typography>
 
@@ -47,8 +53,12 @@ export const Layout = props => {
                         open={Boolean(anchorEl)}
                         onClose={handleClose}
                     >
-                        <MenuItem to="/profile" component={RouterLink}>Profile</MenuItem>
-                        <MenuItem to="/login" component={RouterLink}>Logout</MenuItem>
+                        <MenuItem to="/profile" component={RouterLink}>
+                            Profile
+                        </MenuItem>
+                        <MenuItem to="/login" component={RouterLink}>
+                            Logout
+                        </MenuItem>
                     </Menu>
                 </Toolbar>
             </AppBar>

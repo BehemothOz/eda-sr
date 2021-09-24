@@ -3,7 +3,7 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { TextField, Paper, Button, Stack, Typography } from '@mui/material';
 
 import { CenterScreen } from '../../components/CenterScreen';
-import { QuestionSelect } from '../../components/QuestionSelect'
+import { QuestionSelect } from '../../components/QuestionSelect';
 
 export const RegisterPage = () => {
     const history = useHistory();
@@ -48,40 +48,20 @@ export const RegisterPage = () => {
                             control={control}
                             defaultValue=""
                             render={({ field }) => (
-                                <TextField
-                                    type="password"
-                                    label="Password"
-                                    fullWidth
-                                    required
-                                    {...field}
-                                />
+                                <TextField type="password" label="Password" fullWidth required {...field} />
                             )}
                         />
                         <Controller
                             name="question"
                             control={control}
                             defaultValue="1"
-                            render={({ field }) => (
-                                <QuestionSelect
-                                    label="Question"
-                                    fullWidth
-                                    required
-                                    {...field}
-                                />
-                            )}
+                            render={({ field }) => <QuestionSelect label="Question" fullWidth required {...field} />}
                         />
                         <Controller
                             name="answer"
                             control={control}
                             defaultValue=""
-                            render={({ field }) => (
-                                <TextField
-                                    label="Answer"
-                                    fullWidth
-                                    required
-                                    {...field}
-                                />
-                            )}
+                            render={({ field }) => <TextField label="Answer" fullWidth required {...field} />}
                         />
                         <Stack spacing={1} direction="row">
                             <Button variant="contained" color="primary" type="submit">
