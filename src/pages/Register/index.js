@@ -12,7 +12,7 @@ export const RegisterPage = () => {
 
     const onSubmit = data => {
         console.log('form data after submit: ', data);
-        // history.push('/login');
+        history.push('/login');
     };
 
     return (

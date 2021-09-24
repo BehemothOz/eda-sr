@@ -29,6 +29,14 @@ export const ProfilePage = () => {
                                 )}
                             />
                             <Controller
+                                name="middleName"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <TextField label="Middle name" size="small" fullWidth {...field} />
+                                )}
+                            />
+                            <Controller
                                 name="lastName"
                                 control={control}
                                 defaultValue=""
