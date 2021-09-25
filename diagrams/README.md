@@ -1,7 +1,5 @@
-* [Go to Real Cool Heading section ##](##auth-and-session)
-* [Go to Real Cool Heading section #](#auth-and-session)
-* [Go to Real Cool Heading section _#](#-auth-and-session)
+* [Auth and Session](#auth-and-session)
 
-![](1.svg)
+![sadasdasdasdasd](1.svg)
 
 ## Auth and Session
