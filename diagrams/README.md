@@ -10,24 +10,24 @@
 
 <br/>
 
-## Auth and Session
+### Auth and Session
 
 ![](1.svg)
 
 <br/>
 
-## Сreating a new user
+### Сreating a new user
 
 ![](2.svg)
 
 <br/>
 
-## Editing a user profile
+### Editing a user profile
 
-## Password
+### Password
 
-## Сreating a new task
+### Сreating a new task
 
-## Editing a task
+### Editing a task
 
-## Getting task list (filter)
+### Getting task list (filter)
