@@ -24,10 +24,18 @@
 
 ### Editing a user profile
 
+---
+
 ### Password
+
+---
 
 ### Сreating a new task
 
+---
+
 ### Editing a task
+
+---
 
 ### Getting task list (filter)
