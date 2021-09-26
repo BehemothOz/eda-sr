@@ -47,3 +47,5 @@
 ---
 
 ### Getting task list (filter)
+
+![](7.svg)
