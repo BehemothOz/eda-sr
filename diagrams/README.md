@@ -1,3 +1,5 @@
+## Scenarios
+
 * [Auth and Session](#auth-and-session)
 * [Сreating a new user](#сreating-a-new-user)
 * [Editing a user profile](#editing-a-user-profile)
@@ -6,7 +8,7 @@
 * [Editing a task](#editing-a-task)
 * [Getting task list (filter)](#getting-task-list-(filter))
 
-<br/><br/>
+<br/>
 
 ## Auth and Session
 
@@ -16,7 +18,7 @@
 
 ## Сreating a new user
 
-![](1.svg)
+![](2.svg)
 
 <br/>
 
