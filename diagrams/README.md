@@ -24,17 +24,25 @@
 
 ### Editing a user profile
 
+![](3.svg)
+
 ---
 
 ### Password
+
+![](4.svg)
 
 ---
 
 ### Сreating a new task
 
+![](5.svg)
+
 ---
 
 ### Editing a task
+
+![](6.svg)
 
 ---
 
