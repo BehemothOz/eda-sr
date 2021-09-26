@@ -8,19 +8,19 @@
 * [Editing a task](#editing-a-task)
 * [Getting task list (filter)](#getting-task-list-(filter))
 
-<br/>
+---
 
 ### Auth and Session
----
+
 ![](1.svg)
 
-<br/>
+---
 
 ### Сreating a new user
 
 ![](2.svg)
 
-<br/>
+---
 
 ### Editing a user profile
 
