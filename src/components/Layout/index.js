@@ -62,7 +62,7 @@ export const Layout = props => {
                     </Menu>
                 </Toolbar>
             </AppBar>
-            {children}
+            <main>{children}</main>
         </>
     );
 };
