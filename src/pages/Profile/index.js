@@ -3,6 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { TextField, Paper, Container, Stack, Button } from '@mui/material';
 
 import { Layout } from '../../components/Layout';
+import { QuestionSelect } from '../../components/QuestionSelect';
 
 const Upload = () => {
     return <div style={{ width: 100, height: 100, backgroundColor: '#5c8ae85c' }}></div>;
@@ -45,16 +46,16 @@ export const ProfilePage = () => {
                                 )}
                             />
                             <Controller
-                                name="q"
+                                name="secretQuestion"
                                 control={control}
                                 defaultValue=""
-                                render={({ field }) => <TextField label="Secret Q" size="small" fullWidth {...field} />}
+                                render={({ field }) => <QuestionSelect label="Question" size="small" fullWidth {...field} />}
                             />
                             <Controller
-                                name="a"
+                                name="secretAnswer"
                                 control={control}
                                 defaultValue=""
-                                render={({ field }) => <TextField label="Secret A" size="small" fullWidth {...field} />}
+                                render={({ field }) => <TextField label="Answer" size="small" fullWidth {...field} />}
                             />
 
                             <Button variant="contained" color="primary" type="submit">

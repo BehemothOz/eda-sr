@@ -9,6 +9,7 @@ import {
     Button,
     CardActionArea,
     TextField,
+    Grid,
 } from '@mui/material';
 
 import { Layout } from '../../components/Layout';
@@ -55,27 +56,29 @@ export const HomePage = () => {
                 </Stack>
             </div>
 
-            <Container maxWidth="xs" style={{ paddingTop: 16, paddingBottom: 16 }}>
-                <Stack spacing={1}>
+            <Container maxWidth="lg" style={{ paddingTop: 16, paddingBottom: 16 }}>
+                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     {data.map(dataItem => {
                         const { id, title } = dataItem;
 
                         return (
-                            <Card key={id} onClick={toggleDrawer}>
-                                <CardActionArea>
-                                    <CardContent>
-                                        <Typography gutterBottom variant="h6" component="div">
-                                            {title}
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            from 12 to 21
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
+                            <Grid item xs={4}>
+                                <Card key={id} onClick={toggleDrawer}>
+                                    <CardActionArea>
+                                        <CardContent>
+                                            <Typography gutterBottom variant="h6" component="div">
+                                                {title}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                from 12 to 21
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </Grid>
                         );
                     })}
-                </Stack>
+                </Grid>
             </Container>
 
             <Drawer open={visible} onClose={toggleDrawer}>
