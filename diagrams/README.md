@@ -1,3 +1,5 @@
+_created by_ [Sequence Diagram](https://sequencediagram.org/)
+
 ## Scenarios
 
 * [Auth and Session](#auth-and-session)
