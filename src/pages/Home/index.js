@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Container,
     Drawer,
@@ -15,7 +15,7 @@ import {
 import { Layout } from '../../components/Layout';
 import { SearchInput } from '../../shared/SearchInput';
 import { TaskForm } from '../../components/TaskForm';
-import { previousDay } from 'date-fns';
+import { useModalForm } from '../../hooks/useModalForm';
 
 const data = [
     { id: 1, title: 'Cook pasta with chicken', date: 'Jan 9, 2014' },
@@ -32,48 +32,33 @@ const data = [
     Fields for filter: пользователь, тип задачи, название, плановое время, фактическое время.
 */
 
-const MODE_EDIT = 'edit';
-const MODE_CREATE = 'create';
+const TaskCard = props => {
+    const { data, onClick } = props;
+    const { title } = data;
 
-const defaultState = {
-    visible: false,
-    mode: MODE_CREATE,
-    payload: null,
-};
-
-const useModalForm = () => {
-    const [state, setState] = useState(defaultState);
-
-    const onOpenEdit = payload => {
-        setState({
-            visible: true,
-            mode: MODE_EDIT,
-            payload,
-        });
+    const handleClick = () => {
+        onClick && onClick(data)
     };
 
-    const onOpenCreate = () => {
-        setState({
-            visible: true,
-            mode: MODE_CREATE,
-            payload: null,
-        });
-    };
-
-    const onClose = () => {
-        setState(defaultState);
-    };
-
-    return {
-        state,
-        onOpenEdit,
-        onOpenCreate,
-        onClose,
-    };
+    return (
+        <Card onClick={handleClick}>
+            <CardActionArea>
+                <CardContent>
+                    <Typography gutterBottom variant="h6" component="div">
+                        {title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        from 12 to 21
+                    </Typography>
+                </CardContent>
+            </CardActionArea>
+        </Card>
+    );
 };
 
 export const HomePage = () => {
     const modalForm = useModalForm();
+    const { state: formState } = modalForm;
 
     return (
         <Layout>
@@ -96,30 +81,19 @@ export const HomePage = () => {
             <Container maxWidth="lg" style={{ paddingTop: 16, paddingBottom: 16 }}>
                 <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     {data.map(dataItem => {
-                        const { id, title } = dataItem;
+                        const { id } = dataItem;
 
                         return (
-                            <Grid item xs={4}>
-                                <Card key={id} onClick={() => modalForm.onOpenEdit()}>
-                                    <CardActionArea>
-                                        <CardContent>
-                                            <Typography gutterBottom variant="h6" component="div">
-                                                {title}
-                                            </Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                from 12 to 21
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                </Card>
+                            <Grid key={id} item xs={4}>
+                                <TaskCard data={dataItem} onClick={modalForm.onOpenEdit} />
                             </Grid>
                         );
                     })}
                 </Grid>
             </Container>
 
-            <Drawer open={modalForm.state.visible} onClose={modalForm.onClose}>
-                <TaskForm />
+            <Drawer open={formState.visible} onClose={modalForm.onClose}>
+                <TaskForm mode={formState.mode} data={formState.payload} onClose={modalForm.onClose} />
             </Drawer>
         </Layout>
     );
