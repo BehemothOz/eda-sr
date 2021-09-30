@@ -15,6 +15,7 @@ import {
 import { Layout } from '../../components/Layout';
 import { SearchInput } from '../../shared/SearchInput';
 import { TaskForm } from '../../components/TaskForm';
+import { previousDay } from 'date-fns';
 
 const data = [
     { id: 1, title: 'Cook pasta with chicken', date: 'Jan 9, 2014' },
@@ -31,17 +32,53 @@ const data = [
     Fields for filter: пользователь, тип задачи, название, плановое время, фактическое время.
 */
 
-export const HomePage = () => {
-    const [visible, setVisible] = useState();
+const MODE_EDIT = 'edit';
+const MODE_CREATE = 'create';
 
-    const toggleDrawer = () => {
-        setVisible(prev => !prev);
+const defaultState = {
+    visible: false,
+    mode: MODE_CREATE,
+    payload: null,
+};
+
+const useModalForm = () => {
+    const [state, setState] = useState(defaultState);
+
+    const onOpenEdit = payload => {
+        setState({
+            visible: true,
+            mode: MODE_EDIT,
+            payload,
+        });
     };
+
+    const onOpenCreate = () => {
+        setState({
+            visible: true,
+            mode: MODE_CREATE,
+            payload: null,
+        });
+    };
+
+    const onClose = () => {
+        setState(defaultState);
+    };
+
+    return {
+        state,
+        onOpenEdit,
+        onOpenCreate,
+        onClose,
+    };
+};
+
+export const HomePage = () => {
+    const modalForm = useModalForm();
 
     return (
         <Layout>
             <div style={{ display: 'flex', justifyContent: 'end', padding: 16, backgroundColor: '#e8e8e8' }}>
-                <Button variant="contained" style={{ marginRight: 16 }} onClick={toggleDrawer}>
+                <Button variant="contained" style={{ marginRight: 16 }} onClick={modalForm.onOpenCreate}>
                     Create
                 </Button>
                 <SearchInput />
@@ -57,13 +94,13 @@ export const HomePage = () => {
             </div>
 
             <Container maxWidth="lg" style={{ paddingTop: 16, paddingBottom: 16 }}>
-                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     {data.map(dataItem => {
                         const { id, title } = dataItem;
 
                         return (
                             <Grid item xs={4}>
-                                <Card key={id} onClick={toggleDrawer}>
+                                <Card key={id} onClick={() => modalForm.onOpenEdit()}>
                                     <CardActionArea>
                                         <CardContent>
                                             <Typography gutterBottom variant="h6" component="div">
@@ -81,7 +118,7 @@ export const HomePage = () => {
                 </Grid>
             </Container>
 
-            <Drawer open={visible} onClose={toggleDrawer}>
+            <Drawer open={modalForm.state.visible} onClose={modalForm.onClose}>
                 <TaskForm />
             </Drawer>
         </Layout>
