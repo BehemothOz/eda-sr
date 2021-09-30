@@ -6,7 +6,7 @@ export const MODE_CREATE = 'create';
 const defaultState = {
     visible: false,
     mode: MODE_CREATE,
-    payload: null,
+    payload: {},
 };
 
 export const useModalForm = () => {
@@ -24,7 +24,7 @@ export const useModalForm = () => {
         setState({
             visible: true,
             mode: MODE_CREATE,
-            payload: null,
+            payload: {},
         });
     };
 

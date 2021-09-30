@@ -1,4 +1,4 @@
-import { TextField, Button, FormControl, Select, MenuItem, InputLabel, Stack } from '@mui/material';
+import { TextField, Button, FormControl, Select, MenuItem, InputLabel, Stack, Typography } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import DatePicker from '@mui/lab/DatePicker';
 import Box from '@mui/material/Box';
@@ -22,7 +22,10 @@ import { MODE_EDIT } from '../../hooks/useModalForm'
 */
 
 export const TaskForm = props => {
-    const { mode, onClose } = props;
+    const { mode, data = {}, onClose } = props;
+    console.log(data)
+    const { title } = data;
+
     const { control, handleSubmit } = useForm();
 
     const isEdit = mode === MODE_EDIT;
@@ -32,12 +35,14 @@ export const TaskForm = props => {
     };
 
     return (
-        <Box sx={{ p: 2 }}>
+        <Box sx={{ p: 3 }}>
+            <Typography gutterBottom variant="h5" textAlign="end">{`${isEdit ? 'Update' : 'Create'} task`}</Typography>
+
             <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
                 <Controller
                     name="title"
                     control={control}
-                    defaultValue=""
+                    defaultValue={title || ''}
                     render={({ field }) => (
                         <TextField
                             label="Title"
@@ -57,7 +62,7 @@ export const TaskForm = props => {
                     )}
                 />
                 <FormControl sx={{ marginBottom: 2 }} size="small" fullWidth>
-                    <InputLabel id="demo-simple-select-helper-label">Type</InputLabel>
+                    <InputLabel>Type</InputLabel>
                     <Controller
                         name="type"
                         control={control}
