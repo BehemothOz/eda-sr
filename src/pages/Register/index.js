@@ -52,13 +52,13 @@ export const RegisterPage = () => {
                             )}
                         />
                         <Controller
-                            name="question"
+                            name="secretQuestion"
                             control={control}
                             defaultValue="1"
                             render={({ field }) => <QuestionSelect label="Question" fullWidth required {...field} />}
                         />
                         <Controller
-                            name="answer"
+                            name="secretAnswer"
                             control={control}
                             defaultValue=""
                             render={({ field }) => <TextField label="Answer" fullWidth required {...field} />}

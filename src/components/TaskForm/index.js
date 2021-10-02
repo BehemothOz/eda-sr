@@ -1,26 +1,9 @@
-import { Children } from 'react';
-import {
-    TextField,
-    Paper,
-    Button,
-    FormControl,
-    Select,
-    MenuItem,
-    InputLabel,
-    FormHelperText,
-    Stack,
-} from '@mui/material';
+import { TextField, Button, FormControl, Select, MenuItem, InputLabel, Stack, Typography } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
 import DatePicker from '@mui/lab/DatePicker';
 import Box from '@mui/material/Box';
 
-// const useStyles = makeStyles(theme => ({
-//     paper: {
-//         padding: theme.spacing(2),
-//     },
-//     input: {},
-// }));
+import { MODE_EDIT } from '../../hooks/useModalForm'
 
 /*
     название задачи
@@ -38,23 +21,28 @@ import Box from '@mui/material/Box';
     actualEndTime
 */
 
-export const TaskForm = () => {
-    const classes = {};
-    const history = useHistory();
+export const TaskForm = props => {
+    const { mode, data = {}, onClose } = props;
+    console.log(data)
+    const { title } = data;
 
     const { control, handleSubmit } = useForm();
+
+    const isEdit = mode === MODE_EDIT;
 
     const onSubmit = data => {
         console.log('form data after submit: ', data);
     };
 
     return (
-        <Box sx={{ p: 2 }}>
+        <Box sx={{ p: 3 }}>
+            <Typography gutterBottom variant="h5" textAlign="end">{`${isEdit ? 'Update' : 'Create'} task`}</Typography>
+
             <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
                 <Controller
                     name="title"
                     control={control}
-                    defaultValue=""
+                    defaultValue={title || ''}
                     render={({ field }) => (
                         <TextField
                             label="Title"
@@ -74,7 +62,7 @@ export const TaskForm = () => {
                     )}
                 />
                 <FormControl sx={{ marginBottom: 2 }} size="small" fullWidth>
-                    <InputLabel id="demo-simple-select-helper-label">Type</InputLabel>
+                    <InputLabel>Type</InputLabel>
                     <Controller
                         name="type"
                         control={control}
@@ -150,9 +138,9 @@ export const TaskForm = () => {
                 </Stack>
                 <div style={{ display: 'flex' }}>
                     <Button variant="contained" color="primary" type="submit" style={{ marginRight: 8 }}>
-                        Save
+                        {isEdit ? 'Update' : 'Create'}
                     </Button>
-                    <Button variant="contained" color="secondary">
+                    <Button variant="contained" color="secondary" onClick={onClose}>
                         Close
                     </Button>
                 </div>

@@ -9,9 +9,10 @@ const list = [
 ];
 
 export const QuestionSelect = forwardRef((props, ref) => {
-    const { label, ...otherProps } = props;
+    const { label, size = 'medium', fullWidth = false, ...otherProps } = props;
+
     return (
-        <FormControl fullWidth>
+        <FormControl size={size} fullWidth={fullWidth}>
             <InputLabel>{label}</InputLabel>
             <Select ref={ref} label={label} {...otherProps}>
                 {list.map(({ label, value }) => (
