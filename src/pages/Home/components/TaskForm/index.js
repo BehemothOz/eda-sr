@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import DatePicker from '@mui/lab/DatePicker';
 import Box from '@mui/material/Box';
 
-import { MODE_EDIT } from '../../hooks/useModalForm'
+import { MODE_EDIT } from 'hooks/useModalForm';
 
 /*
     название задачи
@@ -23,7 +23,7 @@ import { MODE_EDIT } from '../../hooks/useModalForm'
 
 export const TaskForm = props => {
     const { mode, data = {}, onClose } = props;
-    console.log(data)
+    console.log(data);
     const { title } = data;
 
     const { control, handleSubmit } = useForm();

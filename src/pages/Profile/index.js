@@ -2,8 +2,8 @@ import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Paper, Container, Stack, Button } from '@mui/material';
 
-import { Layout } from '../../components/Layout';
-import { QuestionSelect } from '../../components/QuestionSelect';
+import { Layout } from 'components/layout/Layout';
+import { QuestionSelect } from 'components/inputs/QuestionSelect';
 
 const Upload = () => {
     return <div style={{ width: 100, height: 100, backgroundColor: '#5c8ae85c' }}></div>;
