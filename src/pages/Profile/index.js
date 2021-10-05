@@ -49,7 +49,7 @@ export const ProfilePage = () => {
                                 name="secretQuestion"
                                 control={control}
                                 defaultValue=""
-                                render={({ field }) => <QuestionSelect label="Question" size="small" fullWidth {...field} />}
+                                render={({ field }) => <QuestionSelect label="Question" size="small" fullWidth withNone={false} {...field} />}
                             />
                             <Controller
                                 name="secretAnswer"

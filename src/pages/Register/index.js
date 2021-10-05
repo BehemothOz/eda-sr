@@ -55,7 +55,7 @@ export const RegisterPage = () => {
                             name="secretQuestion"
                             control={control}
                             defaultValue="1"
-                            render={({ field }) => <QuestionSelect label="Question" fullWidth required {...field} />}
+                            render={({ field }) => <QuestionSelect label="Question" fullWidth required withNone={false} {...field} />}
                         />
                         <Controller
                             name="secretAnswer"

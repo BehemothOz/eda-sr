@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { FormControl, Select, MenuItem, InputLabel } from '@mui/material';
+import { Select } from 'shared/Select';
 
 const list = [
     { label: '1 + 1', value: 1 },
@@ -8,19 +8,4 @@ const list = [
     { label: '8 + 9', value: 4 },
 ];
 
-export const QuestionSelect = forwardRef((props, ref) => {
-    const { label, size = 'medium', fullWidth = false, ...otherProps } = props;
-
-    return (
-        <FormControl size={size} fullWidth={fullWidth}>
-            <InputLabel>{label}</InputLabel>
-            <Select ref={ref} label={label} {...otherProps}>
-                {list.map(({ label, value }) => (
-                    <MenuItem key={value} value={value}>
-                        {label}
-                    </MenuItem>
-                ))}
-            </Select>
-        </FormControl>
-    );
-});
+export const QuestionSelect = forwardRef((props, ref) => <Select ref={ref} list={list} {...props} />);
