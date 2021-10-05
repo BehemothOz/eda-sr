@@ -1,7 +1,8 @@
-import { TextField, Button, FormControl, Select, MenuItem, InputLabel, Stack, Typography } from '@mui/material';
+import { TextField, Button, FormControl, Stack, Typography } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import DatePicker from '@mui/lab/DatePicker';
 import Box from '@mui/material/Box';
+import { TypeSelect } from 'components/inputs/TypeSelect';
 
 import { MODE_EDIT } from 'hooks/useModalForm';
 
@@ -23,7 +24,6 @@ import { MODE_EDIT } from 'hooks/useModalForm';
 
 export const TaskForm = props => {
     const { mode, data = {}, onClose } = props;
-    console.log(data);
     const { title } = data;
 
     const { control, handleSubmit } = useForm();
@@ -49,7 +49,6 @@ export const TaskForm = props => {
                             fullWidth
                             required
                             error={false}
-                            style={{ marginBottom: 8 * 2 }}
                             size="small"
                             inputProps={{
                                 autoComplete: 'new-password',
@@ -61,27 +60,15 @@ export const TaskForm = props => {
                         />
                     )}
                 />
-                <FormControl sx={{ marginBottom: 2 }} size="small" fullWidth>
-                    <InputLabel>Type</InputLabel>
-                    <Controller
-                        name="type"
-                        control={control}
-                        defaultValue=""
-                        render={({ field }) => (
-                            <>
-                                <Select label="Type" {...field}>
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                    <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
-                                </Select>
-                                {/* <FormHelperText>With label + helper text</FormHelperText> */}
-                            </>
-                        )}
-                    />
-                </FormControl>
+                <Controller
+                    name="type"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                        <TypeSelect label="Type" size="small" fullWidth {...field} />
+                    )}
+                />
+
                 <Stack direction="row" spacing={2} sx={{ marginBottom: 2 }}>
                     <Controller
                         name="plannedStartTime"
@@ -110,6 +97,7 @@ export const TaskForm = props => {
                         )}
                     />
                 </Stack>
+
                 <Stack direction="row" spacing={2} sx={{ marginBottom: 2 }}>
                     <Controller
                         name="actualStartTime"
@@ -136,6 +124,7 @@ export const TaskForm = props => {
                         )}
                     />
                 </Stack>
+                
                 <div style={{ display: 'flex' }}>
                     <Button variant="contained" color="primary" type="submit" style={{ marginRight: 8 }}>
                         {isEdit ? 'Update' : 'Create'}
