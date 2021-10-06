@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Stack, Container } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 
@@ -6,11 +7,19 @@ import { UserSelect } from 'components/inputs/UserSelect';
 import { DatePicker } from 'shared/DatePicker';
 
 export const TaskFilter = () => {
-    const { control, handleSubmit } = useForm();
+    const { control, watch, handleSubmit } = useForm();
 
     const onSubmit = data => {
-        console.log(data);
+        console.log('onSubmit TaskFilter', data);
     };
+
+    useEffect(() => {
+        const subscription = watch(() => {
+            handleSubmit(onSubmit)()
+        });
+
+        return () => subscription.unsubscribe();
+      }, [watch, handleSubmit]);
 
     return (
         <div style={{ padding: '16px 0', backgroundColor: '#fff' }}>
