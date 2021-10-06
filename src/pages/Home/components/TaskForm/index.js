@@ -1,8 +1,9 @@
 import { TextField, Button, Stack, Typography } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
-import DatePicker from '@mui/lab/DatePicker';
 import Box from '@mui/material/Box';
+
 import { TypeSelect } from 'components/inputs/TypeSelect';
+import { DatePicker } from 'shared/DatePicker';
 
 import { MODE_EDIT } from 'hooks/useModalForm';
 
@@ -73,27 +74,13 @@ export const TaskForm = props => {
                             name="plannedStartTime"
                             control={control}
                             defaultValue={null}
-                            render={({ field }) => {
-                                return (
-                                    <DatePicker
-                                        label="Planned Start Time"
-                                        renderInput={params => <TextField size="small" {...params} />}
-                                        {...field}
-                                    />
-                                );
-                            }}
+                            render={({ field }) => <DatePicker label="Planned Start Time" {...field} />}
                         />
                         <Controller
                             name="plannedEndTime"
                             control={control}
                             defaultValue={null}
-                            render={({ field }) => (
-                                <DatePicker
-                                    label="Planned End Time"
-                                    renderInput={params => <TextField size="small" {...params} />}
-                                    {...field}
-                                />
-                            )}
+                            render={({ field }) => <DatePicker label="Planned End Time" {...field} />}
                         />
                     </Stack>
 
@@ -102,25 +89,13 @@ export const TaskForm = props => {
                             name="actualStartTime"
                             control={control}
                             defaultValue={null}
-                            render={({ field }) => (
-                                <DatePicker
-                                    label="Actual Start Time"
-                                    renderInput={params => <TextField size="small" {...params} />}
-                                    {...field}
-                                />
-                            )}
+                            render={({ field }) => <DatePicker label="Actual Start Time" {...field} />}
                         />
                         <Controller
                             name="actualEndTime"
                             control={control}
                             defaultValue={null}
-                            render={({ field }) => (
-                                <DatePicker
-                                    label="Actual End Time"
-                                    renderInput={params => <TextField size="small" {...params} />}
-                                    {...field}
-                                />
-                            )}
+                            render={({ field }) => <DatePicker label="Actual End Time" {...field} />}
                         />
                     </Stack>
 

@@ -33,17 +33,13 @@ export const TaskFilter = () => {
                             name="a"
                             control={control}
                             defaultValue={null}
-                            render={({ field }) => {
-                                return <DatePicker label="Time 1" {...field} />;
-                            }}
+                            render={({ field }) => <DatePicker label="Time 1" {...field} />}
                         />
                         <Controller
                             name="b"
                             control={control}
                             defaultValue={null}
-                            render={({ field }) => {
-                                return <DatePicker label="Time 2" {...field} />;
-                            }}
+                            render={({ field }) => <DatePicker label="Time 2" {...field} />}
                         />
                     </Stack>
                 </form>
