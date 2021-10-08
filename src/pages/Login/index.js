@@ -1,8 +1,8 @@
 import { useForm, Controller } from 'react-hook-form';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { TextField, Paper, Button, Stack, Typography } from '@mui/material';
+import { CenterScreen } from 'components/layout/CenterScreen';
 
-import { CenterScreen } from '../../components/CenterScreen';
 import { api } from '../../api';
 
 export const LoginPage = () => {

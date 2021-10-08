@@ -1,21 +1,11 @@
 import React from 'react';
-import {
-    Container,
-    Drawer,
-    Typography,
-    Stack,
-    Card,
-    CardContent,
-    Button,
-    CardActionArea,
-    TextField,
-    Grid,
-} from '@mui/material';
+import { Container, Drawer, Typography, Card, CardContent, Button, CardActionArea, Grid } from '@mui/material';
+import { Layout } from 'components/layout/Layout';
+import { SearchInput } from 'components/inputs/SearchInput';
+import { useModalForm } from 'hooks/useModalForm';
 
-import { Layout } from '../../components/Layout';
-import { SearchInput } from '../../shared/SearchInput';
-import { TaskForm } from '../../components/TaskForm';
-import { useModalForm } from '../../hooks/useModalForm';
+import { TaskForm } from './components/TaskForm';
+import { TaskFilter } from './components/TaskFilter';
 
 const data = [
     { id: 1, title: 'Cook pasta with chicken', date: 'Jan 9, 2014' },
@@ -37,7 +27,7 @@ const TaskCard = props => {
     const { title } = data;
 
     const handleClick = () => {
-        onClick && onClick(data)
+        onClick && onClick(data);
     };
 
     return (
@@ -69,14 +59,7 @@ export const HomePage = () => {
                 <SearchInput />
             </div>
 
-            <div style={{ padding: 16, backgroundColor: '#fff' }}>
-                <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-                    <TextField id="outlined-basic" label="Outlined" variant="outlined" size="small" />
-                    <TextField id="outlined-basic" label="Outlined" variant="outlined" size="small" />
-                    <TextField id="outlined-basic" label="Outlined" variant="outlined" size="small" />
-                    <TextField id="outlined-basic" label="Outlined" variant="outlined" size="small" />
-                </Stack>
-            </div>
+            <TaskFilter />
 
             <Container maxWidth="lg" style={{ paddingTop: 16, paddingBottom: 16 }}>
                 <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>

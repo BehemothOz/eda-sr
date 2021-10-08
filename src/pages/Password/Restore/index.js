@@ -2,7 +2,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { TextField, Paper, Button, Stack, Typography } from '@mui/material';
 
-import { CenterScreen } from '../../../components/CenterScreen';
+import { CenterScreen } from 'components/layout/CenterScreen';
 
 export const RestorePasswordPage = () => {
     const history = useHistory();

@@ -2,8 +2,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { TextField, Paper, Button, Stack, Typography } from '@mui/material';
 
-import { CenterScreen } from '../../components/CenterScreen';
-import { QuestionSelect } from '../../components/QuestionSelect';
+import { CenterScreen } from 'components/layout/CenterScreen';
+import { QuestionSelect } from 'components/inputs/QuestionSelect';
 
 export const RegisterPage = () => {
     const history = useHistory();
@@ -55,7 +55,7 @@ export const RegisterPage = () => {
                             name="secretQuestion"
                             control={control}
                             defaultValue="1"
-                            render={({ field }) => <QuestionSelect label="Question" fullWidth required {...field} />}
+                            render={({ field }) => <QuestionSelect label="Question" fullWidth required withNone={false} {...field} />}
                         />
                         <Controller
                             name="secretAnswer"
