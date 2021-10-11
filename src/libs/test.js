@@ -1,65 +1,59 @@
-// const { limit = 10, methods = ['get'], statusCodes = [413] } = options;
-
 const delay = ms =>
     new Promise(resolve => {
         setTimeout(resolve, ms);
     });
 
-const ftch = () => {
-    return new Promise(resolve => {
+const fetch = args => {
+    return new Promise((_, reject) => {
         setTimeout(() => {
-            resolve({ status: 411, payload: { name: 'Ivan' } });
+            reject({ status: 413, payload: { name: 'Ivan' } });
         }, 1000);
     });
 };
 
-const requestMethods = ['get', 'post', 'put'];
+const repeatable = (func, options = {}) => {
+    const { duration = 2000, max = 3, statusCodes = [413], onError = null } = options;
 
-const createSingle = async () => {
     let count = 0;
 
-    const _retry = async fn => {
-        /*
-       try / catch
-    */
+    const retry = async args => {
+        try {
+            return await func(...args);
+        } catch (e) {
+            if (count < max && statusCodes.includes(e.status)) {
+                onError && onError(e);
 
-        if (count < 3) {
-            console.log('count checker', count);
-            count += 1;
-            await delay(2000);
+                delay(duration);
+                count += 1;
+                return retry(args);
+            }
 
-            return _retry(fn);
-        } else {
-            count = 0;
-            return await fn();
+            throw e;
         }
     };
 
-    const fn = async () => {
-        const response = await ftch();
-
-        return response;
-    };
-
-    const result = _retry(fn);
-
-    return result;
-    // return 100;
+    return (...args) => retry(args);
 };
 
-const create = opts => {
-    return requestMethods.reduce((acc, method) => {
-        return { ...acc, [method]: (...args) => createSingle(opts, ...args) };
-    }, []);
-};
-
-const api = create();
-console.log(api);
-
+/*
+    For testing
+*/
 const search = async () => {
-    const rr = await api.get();
+    const asyncSearch = fetch;
 
-    console.log('Look here', rr);
+    const repeatableSearch = repeatable(asyncSearch, {
+        max: 3,
+        onError: () => {
+            console.log('Ooops! Timeout error.');
+        },
+    });
+
+    try {
+        const rr = await repeatableSearch({ a: 100, b: 200 });
+        console.log('Look here', rr);
+    } catch (e) {
+        console.error(e);
+    }
 };
 
 search();
