@@ -1,4 +1,5 @@
 import React from 'react';
+import { format } from 'date-fns';
 import { Container, Drawer, Typography, Card, CardContent, Button, CardActionArea, Grid } from '@mui/material';
 import { Layout } from 'components/layout/Layout';
 import { SearchInput } from 'components/inputs/SearchInput';
@@ -7,15 +8,13 @@ import { useModalForm } from 'hooks/useModalForm';
 import { TaskForm } from './components/TaskForm';
 import { TaskFilter } from './components/TaskFilter';
 
+const view = date => {
+    return format(date, 'd MMMM p') // view ex: day month time
+}
+
 const data = [
-    { id: 1, title: 'Cook pasta with chicken', date: 'Jan 9, 2014' },
-    { id: 2, title: 'Go to the store for glasses', date: 'Jan 9, 2014' },
-    { id: 3, title: 'Go to the store for glasses', date: 'Jan 9, 2014' },
-    { id: 4, title: 'Go to the store for glasses', date: 'Jan 9, 2014' },
-    { id: 5, title: 'Go to the store for glasses', date: 'Jan 9, 2014' },
-    { id: 6, title: 'Go to the store for glasses', date: 'Jan 9, 2014' },
-    { id: 7, title: 'Go to the store for glasses', date: 'Jan 9, 2014' },
-    { id: 8, title: 'Go to the store for glasses', date: 'Jan 9, 2014' },
+    { id: 1, title: 'Cook pasta with chicken', from: view(new Date(2021, 9, 1)), to: view(new Date(2021, 9, 25)) },
+    { id: 2, title: 'Go to the store for glasses', from: view(new Date(2021, 9, 1)), to: view(new Date(2021, 9, 25)) },
 ];
 
 /*
@@ -24,7 +23,7 @@ const data = [
 
 const TaskCard = props => {
     const { data, onClick } = props;
-    const { title } = data;
+    const { title, from, to } = data;
 
     const handleClick = () => {
         onClick && onClick(data);
@@ -38,7 +37,7 @@ const TaskCard = props => {
                         {title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        from 12 to 21
+                        from {from} to {to}
                     </Typography>
                 </CardContent>
             </CardActionArea>
