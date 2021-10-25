@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
-import { TextField, Paper, Button, Stack, Typography } from '@mui/material';
+import { TextField, Paper, Button, Stack, Typography, Alert, IconButton, Box, Fade  } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { CenterScreen } from 'components/layout/CenterScreen';
+
+import msg from 'components/alert'
 
 import { api } from '../../api';
 
@@ -9,6 +13,8 @@ export const LoginPage = () => {
     const history = useHistory();
 
     const { control, handleSubmit } = useForm();
+
+    const [open, setOpen] = useState(false);
 
     const onSubmit = async data => {
         console.log('form data after submit: ', data);
@@ -19,9 +25,13 @@ export const LoginPage = () => {
         }
     };
 
+    const onClick = () => {
+        msg.error('sadasd');
+    }
+
     return (
         <CenterScreen>
-            <Paper sx={{ width: '100%', p: 2 }}>
+            <Paper sx={{ position: 'relative', width: '100%', p: 2 }}>
                 <Typography gutterBottom variant="h6" sx={{ color: 'text.secondary' }}>
                     Login
                 </Typography>
@@ -69,6 +79,11 @@ export const LoginPage = () => {
                             <Button variant="contained" color="secondary" to="/register" component={RouterLink}>
                                 Register
                             </Button>
+
+                            <Button variant="contained" color="primary" onClick={onClick}>
+                                +
+                            </Button>
+
                             <Button
                                 color="primary"
                                 to="/password"
@@ -80,6 +95,30 @@ export const LoginPage = () => {
                         </Stack>
                     </Stack>
                 </form>
+
+                <Fade in={open}>
+                    <Box sx={{ position: 'absolute', left: 0, right: 0, bottom: -64 }}>
+                        <Alert
+                            variant="filled"
+                            severity="error"
+                            action={
+                                <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    size="small"
+                                    onClick={() => {
+                                        setOpen(false);
+                                    }}
+                                >
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                            sx={{ mb: 2 }}
+                        >
+                            Some error!
+                        </Alert>
+                    </Box>
+                </Fade>
             </Paper>
         </CenterScreen>
     );
