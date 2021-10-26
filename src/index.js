@@ -26,7 +26,6 @@ ReactDOM.render(
     <React.StrictMode>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <SnackbarProvider maxSnack={3} TransitionComponent={Slide} anchorOrigin={{ horizontal: 'right', vertical: 'top' }}>
-                <SnackbarUtilsConfigurator />
                 <Router>
                     <Switch>
                         <Route exact path="/">
