@@ -1,20 +1,17 @@
-import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
-import { TextField, Paper, Button, Stack, Typography, Alert, IconButton, Box, Fade  } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { TextField, Paper, Button, Stack, Typography, Alert, AlertTitle, IconButton, Box } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { CenterScreen } from 'components/layout/CenterScreen';
-
-import msg from 'components/alert'
+import CloseIcon from '@mui/icons-material/Close';
 
 import { api } from '../../api';
 
 export const LoginPage = () => {
     const history = useHistory();
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     const { control, handleSubmit } = useForm();
-
-    const [open, setOpen] = useState(false);
 
     const onSubmit = async data => {
         console.log('form data after submit: ', data);
@@ -26,8 +23,29 @@ export const LoginPage = () => {
     };
 
     const onClick = () => {
-        msg.error('sadasd');
-    }
+        enqueueSnackbar('I love hooks', {
+            autoHideDuration: null,
+            content: (key, message) => (
+                <Alert
+                    severity="error"
+                    variant="filled"
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => closeSnackbar(key)}
+                        >
+                            <CloseIcon fontSize="inherit" />
+                        </IconButton>
+                    }
+                >
+                    <AlertTitle>Error!</AlertTitle>
+                    This is an error alert — <strong>{message}!</strong>
+                </Alert>
+            ),
+        });
+    };
 
     return (
         <CenterScreen>
@@ -95,30 +113,6 @@ export const LoginPage = () => {
                         </Stack>
                     </Stack>
                 </form>
-
-                <Fade in={open}>
-                    <Box sx={{ position: 'absolute', left: 0, right: 0, bottom: -64 }}>
-                        <Alert
-                            variant="filled"
-                            severity="error"
-                            action={
-                                <IconButton
-                                    aria-label="close"
-                                    color="inherit"
-                                    size="small"
-                                    onClick={() => {
-                                        setOpen(false);
-                                    }}
-                                >
-                                    <CloseIcon fontSize="inherit" />
-                                </IconButton>
-                            }
-                            sx={{ mb: 2 }}
-                        >
-                            Some error!
-                        </Alert>
-                    </Box>
-                </Fade>
             </Paper>
         </CenterScreen>
     );

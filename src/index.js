@@ -3,11 +3,10 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { SnackbarProvider } from 'notistack';
-import { SnackbarUtilsConfigurator } from 'components/alert';
 
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import {Slide}  from '@mui/material'
+import { Grow } from '@mui/material';
 
 import './index.css';
 // import App from './App';
@@ -25,7 +24,11 @@ import reportWebVitals from './reportWebVitals';
 ReactDOM.render(
     <React.StrictMode>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <SnackbarProvider maxSnack={3} TransitionComponent={Slide} anchorOrigin={{ horizontal: 'right', vertical: 'top' }}>
+            <SnackbarProvider
+                maxSnack={3}
+                TransitionComponent={Grow}
+                anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+            >
                 <Router>
                     <Switch>
                         <Route exact path="/">
