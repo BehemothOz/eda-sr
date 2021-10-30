@@ -16,23 +16,17 @@ export const LoginPage = () => {
         handleSubmit,
     } = useForm();
 
-    console.log(errors);
-
-    const onSubmit = async data => {
-        console.log('form data after submit: ', data);
-        const result = await api.auth();
-        console.log(result);
-        if (result.token) {
-            history.push('/');
+    const onSubmit = async values => {
+        try {
+            const result = await api.auth(values);
+            result.token && msg.success('Success operation');
+        } catch (error) {
+            msg.error(error.message);
         }
     };
 
-    const onClick = () => {
-        msg.error('This is big error!');
-    };
-
-    const onClick2 = () => {
-        msg.success('This is success text');
+    const onAnonymousSubmit = () => {
+        history.push('/');
     };
 
     return (
@@ -81,28 +75,28 @@ export const LoginPage = () => {
                             rules={{ required: true }}
                         />
                         <Stack spacing={1} direction="row">
-                            <Button variant="contained" color="primary" type="submit">
+                            <Button variant="contained" color="primary" type="submit" disabled>
                                 Send
                             </Button>
                             <Button variant="contained" color="secondary" to="/register" component={RouterLink}>
                                 Register
                             </Button>
-
-                            <Button variant="contained" color="primary" onClick={onClick}>
-                                -
-                            </Button>
-                            <Button variant="contained" color="primary" onClick={onClick2}>
-                                +
-                            </Button>
-
-                            {/* <Button
+                            <Button
                                 color="primary"
                                 to="/password"
                                 component={RouterLink}
                                 style={{ marginLeft: 'auto' }}
                             >
                                 Password
-                            </Button> */}
+                            </Button>
+                        </Stack>
+                        <Stack spacing={1} direction="row">
+                            <Button variant="contained" color="success" onClick={onAnonymousSubmit}>
+                                Anonymous send
+                            </Button>
+                            <Button variant="contained" color="primary" type="submit">
+                                Send with verification
+                            </Button>
                         </Stack>
                     </Stack>
                 </form>

@@ -18,10 +18,12 @@ export const RegisterPage = () => {
 
     const onSubmit = async data => {
         console.log('form data after submit: ', data);
-        const result = await api.register(data);
 
-        if (result) {
-            history.push('/login');
+        try {
+            const result = await api.register(data);
+            result && history.push('/login');
+        } catch (error) {
+            console.error(error);
         }
     };
 
