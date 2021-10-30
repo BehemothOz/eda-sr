@@ -8,15 +8,21 @@ import { QuestionSelect } from 'components/inputs/QuestionSelect';
 import { api } from 'api';
 
 export const RegisterPage = () => {
-    // const history = useHistory();
+    const history = useHistory();
 
-    const { control, handleSubmit } = useForm();
+    const {
+        control,
+        formState: { errors },
+        handleSubmit,
+    } = useForm();
 
     const onSubmit = async data => {
         console.log('form data after submit: ', data);
-        // history.push('/login');
         const result = await api.register(data);
-        console.log('result after register', result);
+
+        if (result) {
+            history.push('/login');
+        }
     };
 
     return (
@@ -36,7 +42,7 @@ export const RegisterPage = () => {
                                     label="Login"
                                     fullWidth
                                     required
-                                    error={false}
+                                    error={Boolean(errors[field.name])}
                                     inputProps={{
                                         autoComplete: 'new-password',
                                         form: {
@@ -46,14 +52,27 @@ export const RegisterPage = () => {
                                     {...field}
                                 />
                             )}
+                            rules={{
+                                required: true,
+                            }}
                         />
                         <Controller
                             name="password"
                             control={control}
                             defaultValue=""
                             render={({ field }) => (
-                                <TextField type="password" label="Password" fullWidth required {...field} />
+                                <TextField
+                                    type="password"
+                                    label="Password"
+                                    fullWidth
+                                    required
+                                    error={Boolean(errors[field.name])}
+                                    {...field}
+                                />
                             )}
+                            rules={{
+                                required: true,
+                            }}
                         />
                         <Controller
                             name="secretQuestion"
@@ -62,12 +81,26 @@ export const RegisterPage = () => {
                             render={({ field }) => (
                                 <QuestionSelect label="Question" fullWidth required withNone={false} {...field} />
                             )}
+                            rules={{
+                                required: true,
+                            }}
                         />
                         <Controller
                             name="secretAnswer"
                             control={control}
                             defaultValue=""
-                            render={({ field }) => <TextField label="Answer" fullWidth required {...field} />}
+                            render={({ field }) => (
+                                <TextField
+                                    label="Answer"
+                                    fullWidth
+                                    required
+                                    error={Boolean(errors[field.name])}
+                                    {...field}
+                                />
+                            )}
+                            rules={{
+                                required: true,
+                            }}
                         />
                         <Stack spacing={1} direction="row">
                             <Button variant="contained" color="primary" type="submit">

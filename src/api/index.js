@@ -2,8 +2,6 @@ import { Users } from './services/users';
 
 const userService = new Users();
 
-console.log(userService);
-
 const delayWithResponse = (time, response) => new Promise(resolve => setTimeout(() => resolve(response), time));
 
 const auth = async () => {
