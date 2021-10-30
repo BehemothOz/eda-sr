@@ -1,53 +1,11 @@
 import { useForm, Controller } from 'react-hook-form';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
-import { TextField, Paper, Button, Stack, Typography, Alert, AlertTitle, IconButton } from '@mui/material';
-import { useSnackbar } from 'notistack';
+import { TextField, Paper, Button, Stack, Typography } from '@mui/material';
 import { CenterScreen } from 'components/layout/CenterScreen';
-import CloseIcon from '@mui/icons-material/Close';
+import { useMessage } from 'hooks/useMessage';
 
 import { api } from '../../api';
-import { useCallback, forwardRef } from 'react';
 
-const Message = forwardRef((props, ref) => {
-    const { type = 'default', title, content, onClose, ...other } = props;
-
-    return (
-        <Alert
-            ref={ref}
-            severity={type}
-            variant="filled"
-            action={
-                <IconButton aria-label="close" color="inherit" size="small" onClick={onClose}>
-                    <CloseIcon fontSize="inherit" />
-                </IconButton>
-            }
-            {...other}
-        >
-            {title && <AlertTitle>{title}</AlertTitle>}
-            {content}
-        </Alert>
-    );
-});
-
-const useMessage = () => {
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
-    const toast = useCallback((msg, options) => {
-        const { type, title } = options;
-
-        enqueueSnackbar(msg, {
-            content: (key, message) => (
-                <Message type={type} title={title} content={message} onClose={() => closeSnackbar(key)} />
-            ),
-        });
-    }, []);
-
-    return {
-        success: (msg, options = {}) => toast(msg, { type: 'success', ...options }),
-        error: (msg, options = {}) => toast(msg, { type: 'error', ...options }),
-        onClose: closeSnackbar,
-    };
-};
 
 export const LoginPage = () => {
     const history = useHistory();
@@ -70,7 +28,7 @@ export const LoginPage = () => {
 
     const onClick2 = () => {
         msg.success('This is success text');
-    }
+    };
 
     return (
         <CenterScreen>
