@@ -6,17 +6,22 @@ import { useMessage } from 'hooks/useMessage';
 
 import { api } from '../../api';
 
-
 export const LoginPage = () => {
     const history = useHistory();
     const msg = useMessage();
 
-    const { control, handleSubmit } = useForm();
+    const {
+        control,
+        formState: { errors },
+        handleSubmit,
+    } = useForm();
+
+    console.log(errors);
 
     const onSubmit = async data => {
         console.log('form data after submit: ', data);
         const result = await api.auth();
-
+        console.log(result);
         if (result.token) {
             history.push('/');
         }
@@ -47,7 +52,7 @@ export const LoginPage = () => {
                                     label="Login"
                                     fullWidth
                                     required
-                                    error={false}
+                                    error={Boolean(errors[field.name])}
                                     inputProps={{
                                         autoComplete: 'new-password',
                                         form: {
@@ -57,6 +62,7 @@ export const LoginPage = () => {
                                     {...field}
                                 />
                             )}
+                            rules={{ required: true }}
                         />
                         <Controller
                             name="password"
@@ -68,10 +74,11 @@ export const LoginPage = () => {
                                     label="Password"
                                     fullWidth
                                     required
-                                    error={false}
+                                    error={Boolean(errors[field.name])}
                                     {...field}
                                 />
                             )}
+                            rules={{ required: true }}
                         />
                         <Stack spacing={1} direction="row">
                             <Button variant="contained" color="primary" type="submit">
