@@ -1,8 +1,22 @@
+import { Users } from './services/users';
+
+const userService = new Users();
+
+console.log(userService);
+
 const delayWithResponse = (time, response) => new Promise(resolve => setTimeout(() => resolve(response), time));
 
 const auth = async () => {
     return await delayWithResponse(1000, {
         token: '123456789',
+    });
+};
+
+const register = async data => {
+    const crearedUserID = userService.register(data);
+
+    return await delayWithResponse(0, {
+        id: crearedUserID,
     });
 };
 
@@ -30,5 +44,6 @@ const search = () => {
 
 export const api = {
     auth,
+    register,
     s: search(),
 };

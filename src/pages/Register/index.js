@@ -5,14 +5,18 @@ import { TextField, Paper, Button, Stack, Typography } from '@mui/material';
 import { CenterScreen } from 'components/layout/CenterScreen';
 import { QuestionSelect } from 'components/inputs/QuestionSelect';
 
+import { api } from 'api';
+
 export const RegisterPage = () => {
-    const history = useHistory();
+    // const history = useHistory();
 
     const { control, handleSubmit } = useForm();
 
-    const onSubmit = data => {
+    const onSubmit = async data => {
         console.log('form data after submit: ', data);
-        history.push('/login');
+        // history.push('/login');
+        const result = await api.register(data);
+        console.log('result after register', result);
     };
 
     return (
@@ -55,7 +59,9 @@ export const RegisterPage = () => {
                             name="secretQuestion"
                             control={control}
                             defaultValue="1"
-                            render={({ field }) => <QuestionSelect label="Question" fullWidth required withNone={false} {...field} />}
+                            render={({ field }) => (
+                                <QuestionSelect label="Question" fullWidth required withNone={false} {...field} />
+                            )}
                         />
                         <Controller
                             name="secretAnswer"
