@@ -1,76 +1,33 @@
 import { useForm, Controller } from 'react-hook-form';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
-import { TextField, Paper, Button, Stack, Typography, Alert, AlertTitle, IconButton } from '@mui/material';
-import { useSnackbar } from 'notistack';
+import { TextField, Paper, Button, Stack, Typography } from '@mui/material';
 import { CenterScreen } from 'components/layout/CenterScreen';
-import CloseIcon from '@mui/icons-material/Close';
+import { useMessage } from 'hooks/useMessage';
 
 import { api } from '../../api';
-import { useCallback, forwardRef } from 'react';
-
-const Message = forwardRef((props, ref) => {
-    const { type = 'default', title, content, onClose, ...other } = props;
-
-    return (
-        <Alert
-            ref={ref}
-            severity={type}
-            variant="filled"
-            action={
-                <IconButton aria-label="close" color="inherit" size="small" onClick={onClose}>
-                    <CloseIcon fontSize="inherit" />
-                </IconButton>
-            }
-            {...other}
-        >
-            {title && <AlertTitle>{title}</AlertTitle>}
-            {content}
-        </Alert>
-    );
-});
-
-const useMessage = () => {
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
-    const toast = useCallback((msg, options) => {
-        const { type, title } = options;
-
-        enqueueSnackbar(msg, {
-            content: (key, message) => (
-                <Message type={type} title={title} content={message} onClose={() => closeSnackbar(key)} />
-            ),
-        });
-    }, []);
-
-    return {
-        success: (msg, options = {}) => toast(msg, { type: 'success', ...options }),
-        error: (msg, options = {}) => toast(msg, { type: 'error', ...options }),
-        onClose: closeSnackbar,
-    };
-};
 
 export const LoginPage = () => {
     const history = useHistory();
     const msg = useMessage();
 
-    const { control, handleSubmit } = useForm();
+    const {
+        control,
+        formState: { errors },
+        handleSubmit,
+    } = useForm();
 
-    const onSubmit = async data => {
-        console.log('form data after submit: ', data);
-        const result = await api.auth();
-
-        if (result.token) {
-            history.push('/');
+    const onSubmit = async values => {
+        try {
+            const result = await api.auth(values);
+            result.token && msg.success('Success operation');
+        } catch (error) {
+            msg.error(error.message);
         }
     };
 
-    const onClick = () => {
-        msg.error('This is big error!');
+    const onAnonymousSubmit = () => {
+        history.push('/');
     };
-
-    const onClick2 = () => {
-        msg.success('This is success text');
-    }
 
     return (
         <CenterScreen>
@@ -89,7 +46,7 @@ export const LoginPage = () => {
                                     label="Login"
                                     fullWidth
                                     required
-                                    error={false}
+                                    error={Boolean(errors[field.name])}
                                     inputProps={{
                                         autoComplete: 'new-password',
                                         form: {
@@ -99,6 +56,7 @@ export const LoginPage = () => {
                                     {...field}
                                 />
                             )}
+                            rules={{ required: true }}
                         />
                         <Controller
                             name="password"
@@ -110,34 +68,35 @@ export const LoginPage = () => {
                                     label="Password"
                                     fullWidth
                                     required
-                                    error={false}
+                                    error={Boolean(errors[field.name])}
                                     {...field}
                                 />
                             )}
+                            rules={{ required: true }}
                         />
                         <Stack spacing={1} direction="row">
-                            <Button variant="contained" color="primary" type="submit">
+                            <Button variant="contained" color="primary" type="submit" disabled>
                                 Send
                             </Button>
                             <Button variant="contained" color="secondary" to="/register" component={RouterLink}>
                                 Register
                             </Button>
-
-                            <Button variant="contained" color="primary" onClick={onClick}>
-                                -
-                            </Button>
-                            <Button variant="contained" color="primary" onClick={onClick2}>
-                                +
-                            </Button>
-
-                            {/* <Button
+                            <Button
                                 color="primary"
                                 to="/password"
                                 component={RouterLink}
                                 style={{ marginLeft: 'auto' }}
                             >
                                 Password
-                            </Button> */}
+                            </Button>
+                        </Stack>
+                        <Stack spacing={1} direction="row">
+                            <Button variant="contained" color="success" onClick={onAnonymousSubmit}>
+                                Anonymous send
+                            </Button>
+                            <Button variant="contained" color="primary" type="submit">
+                                Send with verification
+                            </Button>
                         </Stack>
                     </Stack>
                 </form>

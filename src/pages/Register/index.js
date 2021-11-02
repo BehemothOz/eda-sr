@@ -5,14 +5,26 @@ import { TextField, Paper, Button, Stack, Typography } from '@mui/material';
 import { CenterScreen } from 'components/layout/CenterScreen';
 import { QuestionSelect } from 'components/inputs/QuestionSelect';
 
+import { api } from 'api';
+
 export const RegisterPage = () => {
     const history = useHistory();
 
-    const { control, handleSubmit } = useForm();
+    const {
+        control,
+        formState: { errors },
+        handleSubmit,
+    } = useForm();
 
-    const onSubmit = data => {
+    const onSubmit = async data => {
         console.log('form data after submit: ', data);
-        history.push('/login');
+
+        try {
+            const result = await api.register(data);
+            result && history.push('/login');
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -32,7 +44,7 @@ export const RegisterPage = () => {
                                     label="Login"
                                     fullWidth
                                     required
-                                    error={false}
+                                    error={Boolean(errors[field.name])}
                                     inputProps={{
                                         autoComplete: 'new-password',
                                         form: {
@@ -42,26 +54,55 @@ export const RegisterPage = () => {
                                     {...field}
                                 />
                             )}
+                            rules={{
+                                required: true,
+                            }}
                         />
                         <Controller
                             name="password"
                             control={control}
                             defaultValue=""
                             render={({ field }) => (
-                                <TextField type="password" label="Password" fullWidth required {...field} />
+                                <TextField
+                                    type="password"
+                                    label="Password"
+                                    fullWidth
+                                    required
+                                    error={Boolean(errors[field.name])}
+                                    {...field}
+                                />
                             )}
+                            rules={{
+                                required: true,
+                            }}
                         />
                         <Controller
                             name="secretQuestion"
                             control={control}
                             defaultValue="1"
-                            render={({ field }) => <QuestionSelect label="Question" fullWidth required withNone={false} {...field} />}
+                            render={({ field }) => (
+                                <QuestionSelect label="Question" fullWidth required withNone={false} {...field} />
+                            )}
+                            rules={{
+                                required: true,
+                            }}
                         />
                         <Controller
                             name="secretAnswer"
                             control={control}
                             defaultValue=""
-                            render={({ field }) => <TextField label="Answer" fullWidth required {...field} />}
+                            render={({ field }) => (
+                                <TextField
+                                    label="Answer"
+                                    fullWidth
+                                    required
+                                    error={Boolean(errors[field.name])}
+                                    {...field}
+                                />
+                            )}
+                            rules={{
+                                required: true,
+                            }}
                         />
                         <Stack spacing={1} direction="row">
                             <Button variant="contained" color="primary" type="submit">

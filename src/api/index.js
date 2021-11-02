@@ -1,9 +1,33 @@
-const delayWithResponse = (time, response) => new Promise(resolve => setTimeout(() => resolve(response), time));
+import { Users } from './services/users';
 
-const auth = async () => {
-    return await delayWithResponse(1000, {
-        token: '123456789',
+const userService = new Users();
+
+/*
+    TODO:
+        - create error object
+*/
+
+const delayWithRequest = (time, syncRequest) => {
+    const promise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            try {
+                const response = syncRequest();
+                resolve(response);
+            } catch (error) {
+                reject(error);
+            }
+        }, time);
     });
+
+    return promise;
+};
+
+const auth = async data => {
+    return await delayWithRequest(0, () => userService.checkByID(data));
+};
+
+const register = async data => {
+    return await delayWithRequest(0, () => userService.register(data));
 };
 
 const search = () => {
@@ -11,7 +35,7 @@ const search = () => {
 
     const request = async atr => {
         console.log('search', atr);
-        await delayWithResponse(1000, {
+        await delayWithRequest(1000, {
             data: [],
         });
     };
@@ -30,5 +54,6 @@ const search = () => {
 
 export const api = {
     auth,
+    register,
     s: search(),
 };
