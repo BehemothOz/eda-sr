@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { format } from 'date-fns';
 import { Container, Drawer, Typography, Card, CardContent, Button, CardActionArea, Grid } from '@mui/material';
 import { Layout } from 'components/layout/Layout';
@@ -8,14 +8,11 @@ import { useModalForm } from 'hooks/useModalForm';
 import { TaskForm } from './components/TaskForm';
 import { TaskFilter } from './components/TaskFilter';
 
-const view = date => {
-    return format(date, 'd MMMM p') // view ex: day month time
-}
+import { api } from 'api';
 
-const data = [
-    { id: 1, title: 'Cook pasta with chicken', from: view(new Date(2021, 9, 1)), to: view(new Date(2021, 9, 25)) },
-    { id: 2, title: 'Go to the store for glasses', from: view(new Date(2021, 9, 1)), to: view(new Date(2021, 9, 25)) },
-];
+const view = date => {
+    return format(date, 'd MMMM p'); // view ex: day month time
+};
 
 /*
     Fields for filter: пользователь, тип задачи, название, плановое время, фактическое время.
@@ -37,7 +34,7 @@ const TaskCard = props => {
                         {title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        from {from} to {to}
+                        from {view(from)} to {view(to)}
                     </Typography>
                 </CardContent>
             </CardActionArea>
@@ -45,13 +42,93 @@ const TaskCard = props => {
     );
 };
 
+/*
+    statuses
+
+    idle | pending | resolved | rejected
+
+    isLoading: status === 'idle' || status === 'pending'
+*/
+
+function someReducer(state, action) {
+    switch (action.type) {
+      case 'error': {
+        return {
+          ...state,
+          status: 'rejected',
+          error: action.error,
+        }
+      }
+      case 'success': {
+        return {
+          ...state,
+          status: 'resolved',
+          position: action.position,
+        }
+      }
+      case 'started': {
+        return {
+          ...state,
+          status: 'pending',
+        }
+      }
+      default: {
+        throw new Error(`Unhandled action type: ${action.type}`)
+      }
+    }
+  }
+
+/*
+    TODO:
+        - link for async func
+        - clear state
+*/
+const useResource = asyncFunc => {
+    const [data, setData] = useState([]);
+
+    const run = useCallback(
+        async (...args) => {
+            try {
+                const response = await asyncFunc(...args);
+                setData(response);
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        [asyncFunc]
+    );
+
+    return {
+        data,
+        run,
+    };
+};
+
 export const HomePage = () => {
+    const { data, run: request } = useResource(api.getTasks);
+
+    useEffect(() => {
+        request('one_args', 'two_args');
+    }, [request]);
+
     const modalForm = useModalForm();
     const { state: formState } = modalForm;
+
+    const create = async () => {
+        try {
+            await api.createTask({ title: 'Mock', from: new Date(), to: new Date() });
+            request();
+        } catch (error) {
+            console.log('111111', error);
+        }
+    };
 
     return (
         <Layout>
             <div style={{ display: 'flex', justifyContent: 'end', padding: 16, backgroundColor: '#e8e8e8' }}>
+                <Button variant="contained" style={{ marginRight: 16 }} onClick={create}>
+                    Auto Create
+                </Button>
                 <Button variant="contained" style={{ marginRight: 16 }} onClick={modalForm.onOpenCreate}>
                     Create
                 </Button>

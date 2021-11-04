@@ -23,9 +23,18 @@ import { MODE_EDIT } from 'hooks/useModalForm';
     actualEndTime
 */
 
+const useFormRequest = mode => {
+    const create = 1;
+    const update = 2;
+
+    return mode === MODE_EDIT ? update : create;
+}
+
 export const TaskForm = props => {
     const { mode, data = {}, onClose } = props;
     const { title } = data;
+
+    const requestNumber = useFormRequest(mode);
 
     /*
         useForm({ defaultValues: { name: value, ... } })
@@ -36,7 +45,7 @@ export const TaskForm = props => {
     const isEdit = mode === MODE_EDIT;
 
     const onSubmit = data => {
-        console.log('form data after submit: ', data);
+        console.log(requestNumber, 'form data after submit: ', data);
     };
 
     return (

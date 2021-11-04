@@ -1,6 +1,8 @@
 import { Users } from './services/users';
+import { Tasks } from './services/tasks';
 
 const userService = new Users();
+const tasksService = new Tasks();
 
 /*
     TODO:
@@ -30,6 +32,14 @@ const register = async data => {
     return await delayWithRequest(0, () => userService.register(data));
 };
 
+const getTasks = async () => {
+    return await delayWithRequest(0, () => tasksService.getAll());
+};
+
+const createTask = async data => {
+    return await delayWithRequest(0, () => tasksService.create(data));
+};
+
 const search = () => {
     const params = { q: '', f: null };
 
@@ -56,4 +66,7 @@ export const api = {
     auth,
     register,
     s: search(),
+
+    getTasks,
+    createTask,
 };
