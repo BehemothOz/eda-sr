@@ -11,7 +11,7 @@ const Upload = () => {
 
 export const ProfilePage = () => {
     const { control, handleSubmit } = useForm();
-
+    // console.count('ProfilePage')
     const onSubmit = data => console.log('form data after submit: ', data);
 
     return (

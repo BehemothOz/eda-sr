@@ -30,7 +30,7 @@ import { api } from 'api';
 */
 
 const useFormRequest = (mode, onSuccess, onError) => {
-    const { run: create } = useResource(api.createTask, { onSuccess, onError });
+    const create = useResource(api.createTask, { onSuccess, onError });
     // const { run: update } = useResource(api.updateTask, { onSucces, onError });
 
     return mode === MODE_EDIT ? () => {} : create;
@@ -68,11 +68,12 @@ const TaskFormView = props => {
     const { mode, data = {}, callAfterSuccessSubmit, onClose } = props;
     const { title } = data;
 
-    const prevValue = usePrevious(props);
+    // const prevValue = usePrevious(props);
 
-    React.useEffect(() => {
-        console.log(funcR(prevValue, props))
-    })
+    // React.useEffect(() => {
+    //     // console.log(funcR(prevValue, props))
+    //     console.log(funcR(prevValue, props))
+    // })
 
     console.log('TASK FORM RENDER COUNT', props);
 
@@ -92,9 +93,16 @@ const TaskFormView = props => {
         }
     );
 
+    // const prevR = usePrevious({ request });
+
+    // React.useEffect(() => {
+    //     // console.log(funcR(prevValue, props))
+    //     console.log('REQUEST EQ', funcR(prevR, { request }))
+    // })
+
     const isEdit = mode === MODE_EDIT;
 
-    const onSubmit = async data => {
+    const onSubmit = data => {
         console.log('form data after submit: ', data);
 
         request({ title: '1212', from: new Date(), to: new Date() });
