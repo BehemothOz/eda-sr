@@ -40,33 +40,20 @@ const createTask = async data => {
     return await delayWithRequest(0, () => tasksService.create(data));
 };
 
-const search = () => {
-    const params = { q: '', f: null };
+const updateTask = async (id, data) => {
+    return await delayWithRequest(0, () => tasksService.update(id, data));
+};
 
-    const request = async atr => {
-        console.log('search', atr);
-        await delayWithRequest(1000, {
-            data: [],
-        });
-    };
-
-    return {
-        searchQuery: async q => {
-            params.q = q;
-            return await request(params);
-        },
-        searchFilter: async f => {
-            params.f = f;
-            return await request(params);
-        },
-    };
+const deleteTask = async id => {
+    return await delayWithRequest(0, () => tasksService.delete(id));
 };
 
 export const api = {
     auth,
     register,
-    s: search(),
 
     getTasks,
     createTask,
+    updateTask,
+    deleteTask
 };

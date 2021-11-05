@@ -32,6 +32,7 @@ export class Tasks {
     getAll() {
         console.log('this.tasks', this.tasks);
         return this.tasks;
+        // throw new Error('Ooops')
     }
 
     getByID() {}

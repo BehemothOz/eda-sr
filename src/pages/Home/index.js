@@ -1,127 +1,22 @@
-import React, { useState, useEffect, useCallback, useReducer } from 'react';
-import { format } from 'date-fns';
-import { Container, Drawer, Typography, Card, CardContent, Button, CardActionArea, Grid } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Container, Drawer, Button } from '@mui/material';
 import { Layout } from 'components/layout/Layout';
 import { SearchInput } from 'components/inputs/SearchInput';
 import { useModalForm } from 'hooks/useModalForm';
+import { useResource } from 'hooks/useResource';
+import { api } from 'api';
 
 import { TaskForm } from './components/TaskForm';
 import { TaskFilter } from './components/TaskFilter';
-
-import { api } from 'api';
-
-const view = date => {
-    return format(date, 'd MMMM p'); // view ex: day month time
-};
+import { Tasks } from './components/Tasks';
 
 /*
     Fields for filter: пользователь, тип задачи, название, плановое время, фактическое время.
 */
 
-const TaskCard = props => {
-    const { data, onClick } = props;
-    const { title, from, to } = data;
-
-    const handleClick = () => {
-        onClick && onClick(data);
-    };
-
-    return (
-        <Card onClick={handleClick}>
-            <CardActionArea>
-                <CardContent>
-                    <Typography gutterBottom variant="h6" component="div">
-                        {title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        from {view(from)} to {view(to)}
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
-        </Card>
-    );
-};
-
-/*
-    statuses
-
-    isLoading: status === 'idle' || status === 'pending'
-    isIdle: status === 'idle'
-    isPending: status === 'pending'
-    isResolved: status === 'resolved'
-    isRejected: status === 'rejected'
-*/
-
-function reducer(state, action) {
-    switch (action.type) {
-        case 'error': {
-            return {
-                ...state,
-                status: 'rejected',
-                error: action.error,
-            };
-        }
-        case 'success': {
-            return {
-                ...state,
-                status: 'resolved',
-                data: action.data,
-            };
-        }
-        case 'started': {
-            return {
-                ...state,
-                status: 'pending',
-            };
-        }
-        default: {
-            // Who?
-            throw new Error(`Unhandled action type: ${action.type}`);
-        }
-    }
-}
-
-/*
-    TODO:
-        - link for async func
-        - clear state
-*/
-
-const initialState = {
-    status: 'idle',
-    data: [],
-    error: null,
-};
-
-const useResource = asyncFunc => {
-    const [state, dispatch] = useReducer(reducer, initialState);
-
-    const run = useCallback(
-        async (...args) => {
-            try {
-                dispatch({ type: 'started' });
-
-                const response = await asyncFunc(...args);
-                dispatch({ type: 'success', data: response });
-            } catch (error) {
-                dispatch({
-                    type: 'error',
-                    error: new Error('Some error'),
-                });
-            }
-        },
-        [asyncFunc]
-    );
-
-    return {
-        ...state,
-        run,
-    };
-};
-
 export const HomePage = () => {
     const { data, status, run: request } = useResource(api.getTasks);
-    console.log(status)
+    console.log(status);
 
     useEffect(() => {
         request('one_args', 'two_args');
@@ -154,17 +49,7 @@ export const HomePage = () => {
             <TaskFilter />
 
             <Container maxWidth="lg" style={{ paddingTop: 16, paddingBottom: 16 }}>
-                <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    {data.map(dataItem => {
-                        const { id } = dataItem;
-
-                        return (
-                            <Grid key={id} item xs={4}>
-                                <TaskCard data={dataItem} onClick={modalForm.onOpenEdit} />
-                            </Grid>
-                        );
-                    })}
-                </Grid>
+                <Tasks data={data} onOpen={modalForm.onOpenEdit} />
             </Container>
 
             <Drawer open={formState.visible} onClose={modalForm.onClose}>
