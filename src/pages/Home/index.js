@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useReducer } from 'react';
 import { format } from 'date-fns';
 import { Container, Drawer, Typography, Card, CardContent, Button, CardActionArea, Grid } from '@mui/material';
 import { Layout } from 'components/layout/Layout';
@@ -45,67 +45,83 @@ const TaskCard = props => {
 /*
     statuses
 
-    idle | pending | resolved | rejected
-
     isLoading: status === 'idle' || status === 'pending'
+    isIdle: status === 'idle'
+    isPending: status === 'pending'
+    isResolved: status === 'resolved'
+    isRejected: status === 'rejected'
 */
 
-function someReducer(state, action) {
+function reducer(state, action) {
     switch (action.type) {
-      case 'error': {
-        return {
-          ...state,
-          status: 'rejected',
-          error: action.error,
+        case 'error': {
+            return {
+                ...state,
+                status: 'rejected',
+                error: action.error,
+            };
         }
-      }
-      case 'success': {
-        return {
-          ...state,
-          status: 'resolved',
-          position: action.position,
+        case 'success': {
+            return {
+                ...state,
+                status: 'resolved',
+                data: action.data,
+            };
         }
-      }
-      case 'started': {
-        return {
-          ...state,
-          status: 'pending',
+        case 'started': {
+            return {
+                ...state,
+                status: 'pending',
+            };
         }
-      }
-      default: {
-        throw new Error(`Unhandled action type: ${action.type}`)
-      }
+        default: {
+            // Who?
+            throw new Error(`Unhandled action type: ${action.type}`);
+        }
     }
-  }
+}
 
 /*
     TODO:
         - link for async func
         - clear state
 */
+
+const initialState = {
+    status: 'idle',
+    data: [],
+    error: null,
+};
+
 const useResource = asyncFunc => {
-    const [data, setData] = useState([]);
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     const run = useCallback(
         async (...args) => {
             try {
+                dispatch({ type: 'started' });
+
                 const response = await asyncFunc(...args);
-                setData(response);
+                dispatch({ type: 'success', data: response });
             } catch (error) {
-                console.error(error);
+                dispatch({
+                    type: 'error',
+                    error: new Error('Some error'),
+                });
             }
         },
         [asyncFunc]
     );
 
     return {
-        data,
+        ...state,
         run,
     };
 };
 
 export const HomePage = () => {
-    const { data, run: request } = useResource(api.getTasks);
+    const { data, status, run: request } = useResource(api.getTasks);
+    console.log(status)
 
     useEffect(() => {
         request('one_args', 'two_args');

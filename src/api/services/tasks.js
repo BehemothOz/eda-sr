@@ -30,7 +30,7 @@ export class Tasks {
     }
 
     getAll() {
-        console.log('this.tasks', this.tasks)
+        console.log('this.tasks', this.tasks);
         return this.tasks;
     }
 
@@ -43,7 +43,13 @@ export class Tasks {
         return id;
     }
 
-    update() {}
+    update(id, data) {
+        this.tasks = this.tasks.map(task => (task.id === id ? { ...task, ...data } : task));
+        return id;
+    }
 
-    delete() {}
+    delete(id) {
+        this.tasks = this.tasks.filter(task => task.id !== id);
+        return id;
+    }
 }
