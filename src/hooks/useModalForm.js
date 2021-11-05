@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 export const MODE_EDIT = 'edit';
 export const MODE_CREATE = 'create';
@@ -6,7 +6,7 @@ export const MODE_CREATE = 'create';
 const defaultState = {
     visible: false,
     mode: MODE_CREATE,
-    payload: {},
+    payload: undefined,
 };
 
 export const useModalForm = () => {
@@ -24,13 +24,13 @@ export const useModalForm = () => {
         setState({
             visible: true,
             mode: MODE_CREATE,
-            payload: {},
+            payload: undefined,
         });
     };
 
-    const onClose = () => {
+    const onClose = useCallback(() => {
         setState(defaultState);
-    };
+    }, []);
 
     return {
         state,

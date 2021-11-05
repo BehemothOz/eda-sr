@@ -15,31 +15,19 @@ import { Tasks } from './components/Tasks';
 */
 
 export const HomePage = () => {
-    const { data, status, run: request } = useResource(api.getTasks);
-    console.log(status);
-
-    useEffect(() => {
-        request('one_args', 'two_args');
-    }, [request]);
+    const { data, status, run: request } = useResource(api.getTasks, { initialData: [] });
+    console.log('STATUS tasks', status, data);
 
     const modalForm = useModalForm();
     const { state: formState } = modalForm;
 
-    const create = async () => {
-        try {
-            await api.createTask({ title: 'Mock', from: new Date(), to: new Date() });
-            request();
-        } catch (error) {
-            console.log('111111', error);
-        }
-    };
+    useEffect(() => {
+        request();
+    }, [request]);
 
     return (
         <Layout>
             <div style={{ display: 'flex', justifyContent: 'end', padding: 16, backgroundColor: '#e8e8e8' }}>
-                <Button variant="contained" style={{ marginRight: 16 }} onClick={create}>
-                    Auto Create
-                </Button>
                 <Button variant="contained" style={{ marginRight: 16 }} onClick={modalForm.onOpenCreate}>
                     Create
                 </Button>
@@ -53,7 +41,12 @@ export const HomePage = () => {
             </Container>
 
             <Drawer open={formState.visible} onClose={modalForm.onClose}>
-                <TaskForm mode={formState.mode} data={formState.payload} onClose={modalForm.onClose} />
+                <TaskForm
+                    mode={formState.mode}
+                    data={formState.payload}
+                    callAfterSuccessSubmit={request}
+                    onClose={modalForm.onClose}
+                />
             </Drawer>
         </Layout>
     );

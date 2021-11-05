@@ -38,13 +38,16 @@ export class Tasks {
     getByID() {}
 
     create(data) {
+        console.log('CALLED CREATE')
         const id = generateID.get();
         this.tasks = [...this.tasks, { id, ...data }];
 
         return id;
+        // throw new Error('Ooops')
     }
 
     update(id, data) {
+        console.log('CALLED UPDATE')
         this.tasks = this.tasks.map(task => (task.id === id ? { ...task, ...data } : task));
         return id;
     }

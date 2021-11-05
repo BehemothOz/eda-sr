@@ -1,3 +1,4 @@
+import React, { memo } from 'react';
 import { TextField, Button, Stack, Typography } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import Box from '@mui/material/Box';
@@ -6,6 +7,11 @@ import { TypeSelect } from 'components/inputs/TypeSelect';
 import { DatePicker } from 'shared/DatePicker';
 
 import { MODE_EDIT } from 'hooks/useModalForm';
+
+import { useResource } from 'hooks/useResource';
+import { useMessage } from 'hooks/useMessage';
+
+import { api } from 'api';
 
 /*
     название задачи
@@ -23,36 +29,84 @@ import { MODE_EDIT } from 'hooks/useModalForm';
     actualEndTime
 */
 
-const useFormRequest = mode => {
-    const create = 1;
-    const update = 2;
+const useFormRequest = (mode, onSuccess, onError) => {
+    const { run: create } = useResource(api.createTask, { onSuccess, onError });
+    // const { run: update } = useResource(api.updateTask, { onSucces, onError });
 
-    return mode === MODE_EDIT ? update : create;
+    return mode === MODE_EDIT ? () => {} : create;
+};
+
+/*
+    useForm({ defaultValues: { name: value, ... } })
+*/
+
+function usePrevious(value) {
+    const ref = React.useRef();
+
+    React.useEffect(() => {
+        ref.current = value;
+    }, [value]);
+
+    return ref.current;
 }
 
-export const TaskForm = props => {
-    const { mode, data = {}, onClose } = props;
+const funcR = (p = {}, c = {}) => {
+    return Object.entries(c).reduce((acc, it) => {
+        const [key, value] = it;
+        return {
+            ...acc,
+            [key]: {
+                prev: p[key],
+                curr: value,
+                equal: p[key] === value
+            }
+        }
+    }, {})
+}
+
+const TaskFormView = props => {
+    const { mode, data = {}, callAfterSuccessSubmit, onClose } = props;
     const { title } = data;
 
-    const requestNumber = useFormRequest(mode);
+    const prevValue = usePrevious(props);
 
-    /*
-        useForm({ defaultValues: { name: value, ... } })
-    */
+    React.useEffect(() => {
+        console.log(funcR(prevValue, props))
+    })
+
+    console.log('TASK FORM RENDER COUNT', props);
 
     const { control, handleSubmit } = useForm();
+    const message = useMessage();
+
+    const request = useFormRequest(
+        mode,
+        () => {
+            message.success(`Success operation`);
+
+            callAfterSuccessSubmit();
+            onClose();
+        },
+        () => {
+            message.error(`Error operation`);
+        }
+    );
 
     const isEdit = mode === MODE_EDIT;
 
-    const onSubmit = data => {
-        console.log(requestNumber, 'form data after submit: ', data);
+    const onSubmit = async data => {
+        console.log('form data after submit: ', data);
+
+        request({ title: '1212', from: new Date(), to: new Date() });
     };
+
+    const onError = error => console.log('Uncaught error', error);
 
     return (
         <Box sx={{ p: 3 }}>
             <Typography gutterBottom variant="h5" textAlign="end">{`${isEdit ? 'Update' : 'Create'} task`}</Typography>
 
-            <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+            <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit, onError)}>
                 <Stack spacing={2}>
                     <Controller
                         name="title"
@@ -125,3 +179,6 @@ export const TaskForm = props => {
         </Box>
     );
 };
+
+// Ignore parent component work
+export const TaskForm = memo(TaskFormView);

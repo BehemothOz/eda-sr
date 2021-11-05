@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useReducer } from 'react';
+import { useCallback, useReducer, useRef, useEffect } from 'react';
 
 /*
     statuses
@@ -45,27 +45,36 @@ function reducer(state, action) {
         - clear state
 */
 
-const initialState = {
-    status: 'idle',
-    data: [],
-    error: null,
-};
+export const useResource = (asyncFunc, options = {}) => {
+    const { initialData = null, onSuccess, onError } = options;
 
-export const useResource = asyncFunc => {
-    const [state, dispatch] = useReducer(reducer, initialState);
+    const refOnSuccess = useRef(onSuccess);
+    const refOnError = useRef(onError);
+
+    useEffect(() => {
+        refOnSuccess.current = onSuccess;
+        refOnError.current = onError;
+    });
+
+    const [state, dispatch] = useReducer(reducer, {
+        status: 'idle',
+        data: initialData,
+        error: null,
+    });
 
     const run = useCallback(
         async (...args) => {
             try {
                 dispatch({ type: 'started' });
-
                 const response = await asyncFunc(...args);
+
                 dispatch({ type: 'success', data: response });
+                refOnSuccess.current && refOnSuccess.current(response);
             } catch (error) {
-                dispatch({
-                    type: 'error',
-                    error: new Error('Some error'),
-                });
+                console.error('Inside run error', error);
+
+                dispatch({ type: 'error', error: new Error('Some error') });
+                refOnError.current && refOnError.current(error);
             }
         },
         [asyncFunc]
