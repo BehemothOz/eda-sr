@@ -65,20 +65,23 @@ export const useResource = (asyncFunc, options = {}) => {
     const run = useCallback(
         async (...args) => {
             try {
-                // dispatch({ type: 'started' });
+                dispatch({ type: 'started' });
                 const response = await asyncFunc(...args);
 
-                // dispatch({ type: 'success', data: response });
+                dispatch({ type: 'success', data: response });
                 refOnSuccess.current && refOnSuccess.current(response);
             } catch (error) {
                 console.error('Inside run error', error);
 
-                // dispatch({ type: 'error', error: new Error('Some error') });
+                dispatch({ type: 'error', error: new Error('Some error') });
                 refOnError.current && refOnError.current(error);
             }
         },
         [asyncFunc]
     );
 
-    return run;
+    return {
+        ...state,
+        run,
+    };
 };
