@@ -53,7 +53,9 @@ export class Tasks {
     }
 
     delete(id) {
+        console.log('asdasd')
         this.tasks = this.tasks.filter(task => task.id !== id);
+        console.log(this.tasks)
         return id;
     }
 }

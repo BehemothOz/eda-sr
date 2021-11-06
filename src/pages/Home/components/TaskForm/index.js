@@ -30,52 +30,43 @@ import { api } from 'api';
 */
 
 const useFormRequest = (mode, onSuccess, onError) => {
-    const create = useResource(api.createTask, { onSuccess, onError });
-    // const { run: update } = useResource(api.updateTask, { onSucces, onError });
+    const { run: create } = useResource(api.createTask, { onSuccess, onError });
+    const { run: update } = useResource(api.updateTask, { onSuccess, onError });
 
-    return mode === MODE_EDIT ? () => {} : create;
+    return mode === MODE_EDIT ? update : create;
 };
 
 /*
     useForm({ defaultValues: { name: value, ... } })
 */
 
-function usePrevious(value) {
-    const ref = React.useRef();
+const DeleteButton = props => {
+    const { id, callAfterSuccessSubmit, onClose } = props;
 
-    React.useEffect(() => {
-        ref.current = value;
-    }, [value]);
+    const { run: deleteTask } = useResource(api.deleteTask, {
+        onSuccess: () => {
+            callAfterSuccessSubmit();
+            onClose();
+        },
+        onError: error => console.log(error),
+    });
 
-    return ref.current;
-}
+    const handleClick = () => {
+        deleteTask(id);
+    };
 
-const funcR = (p = {}, c = {}) => {
-    return Object.entries(c).reduce((acc, it) => {
-        const [key, value] = it;
-        return {
-            ...acc,
-            [key]: {
-                prev: p[key],
-                curr: value,
-                equal: p[key] === value
-            }
-        }
-    }, {})
-}
+    return (
+        <Button sx={{ marginLeft: 'auto' }} variant="contained" color="error" onClick={handleClick}>
+            Delete
+        </Button>
+    );
+};
 
 const TaskFormView = props => {
     const { mode, data = {}, callAfterSuccessSubmit, onClose } = props;
-    const { title } = data;
+    const { id, title } = data;
 
-    // const prevValue = usePrevious(props);
-
-    // React.useEffect(() => {
-    //     // console.log(funcR(prevValue, props))
-    //     console.log(funcR(prevValue, props))
-    // })
-
-    console.log('TASK FORM RENDER COUNT', props);
+    console.log('TASK FORM RENDER COUNT');
 
     const { control, handleSubmit } = useForm();
     const message = useMessage();
@@ -93,19 +84,14 @@ const TaskFormView = props => {
         }
     );
 
-    // const prevR = usePrevious({ request });
-
-    // React.useEffect(() => {
-    //     // console.log(funcR(prevValue, props))
-    //     console.log('REQUEST EQ', funcR(prevR, { request }))
-    // })
-
     const isEdit = mode === MODE_EDIT;
 
     const onSubmit = data => {
         console.log('form data after submit: ', data);
 
-        request({ title: '1212', from: new Date(), to: new Date() });
+        isEdit
+            ? request(id, { title: '1212', from: new Date(), to: new Date() })
+            : request({ title: '1212', from: new Date(), to: new Date() });
     };
 
     const onError = error => console.log('Uncaught error', error);
@@ -181,6 +167,9 @@ const TaskFormView = props => {
                         <Button variant="contained" color="secondary" onClick={onClose}>
                             Close
                         </Button>
+                        {isEdit && (
+                            <DeleteButton id={id} callAfterSuccessSubmit={callAfterSuccessSubmit} onClose={onClose} />
+                        )}
                     </div>
                 </Stack>
             </form>

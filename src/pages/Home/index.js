@@ -15,16 +15,15 @@ import { Tasks } from './components/Tasks';
 */
 
 export const HomePage = () => {
-    const request = useResource(api.getTasks, { initialData: [] });
-    // const { data, status, run: request } = useResource(api.getTasks, { initialData: [] });
+    const { data, status, run: request } = useResource(api.getTasks, { initialData: [] });
     // console.log('STATUS tasks', status, data);
 
     const modalForm = useModalForm();
     const { state: formState } = modalForm;
 
-    // useEffect(() => {
-    //     request();
-    // }, [request]);
+    useEffect(() => {
+        request();
+    }, [request]);
 
     return (
         <Layout>
@@ -38,7 +37,7 @@ export const HomePage = () => {
             <TaskFilter />
 
             <Container maxWidth="lg" style={{ paddingTop: 16, paddingBottom: 16 }}>
-                <Tasks data={[]} onOpen={modalForm.onOpenEdit} />
+                <Tasks data={data} onOpen={modalForm.onOpenEdit} />
             </Container>
 
             <Drawer open={formState.visible} onClose={modalForm.onClose}>
