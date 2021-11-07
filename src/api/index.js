@@ -1,5 +1,6 @@
 import { Users } from './services/users';
 import { Tasks } from './services/tasks';
+import { sessionService } from './services/session';
 
 const userService = new Users();
 const tasksService = new Tasks();
@@ -25,11 +26,17 @@ const delayWithRequest = (time, syncRequest) => {
 };
 
 const auth = async data => {
-    return await delayWithRequest(0, () => userService.checkByID(data));
+    return await delayWithRequest(0, () => userService.checkByLogin(data)).then(userID =>
+        sessionService.setUserID(userID)
+    );
 };
 
 const register = async data => {
     return await delayWithRequest(0, () => userService.register(data));
+};
+
+const getUser = async userID => {
+    return await delayWithRequest(0, () => userService.get(userID));
 };
 
 const getTasks = async () => {
@@ -51,9 +58,10 @@ const deleteTask = async id => {
 export const api = {
     auth,
     register,
+    getUser,
 
     getTasks,
     createTask,
     updateTask,
-    deleteTask
+    deleteTask,
 };

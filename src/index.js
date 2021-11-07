@@ -1,59 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-
 import { SnackbarProvider } from 'notistack';
-
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { Grow } from '@mui/material';
+import { AuthProvider } from 'providers/AuthProvider';
 
-import './index.css';
-// import App from './App';
-
-import { LoginPage } from './pages/Login';
-import { RegisterPage } from './pages/Register';
-import { PasswordPage } from './pages/Password';
-import { SecretPasswordPage } from './pages/Password/Secret';
-import { RestorePasswordPage } from './pages/Password/Restore';
-import { HomePage } from './pages/Home';
-import { ProfilePage } from './pages/Profile';
-
+import App from './App';
 import reportWebVitals from './reportWebVitals';
+import './index.css';
+
+const MAX_SNACK_MSG = 3;
 
 ReactDOM.render(
     <React.StrictMode>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <SnackbarProvider
-                maxSnack={3}
+                maxSnack={MAX_SNACK_MSG}
                 TransitionComponent={Grow}
                 anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
             >
-                <Router>
-                    <Switch>
-                        <Route exact path="/">
-                            <HomePage />
-                        </Route>
-                        <Route path="/profile">
-                            <ProfilePage />
-                        </Route>
-                        <Route path="/login">
-                            <LoginPage />
-                        </Route>
-                        <Route exact path="/register">
-                            <RegisterPage />
-                        </Route>
-                        <Route exact path="/password">
-                            <PasswordPage />
-                        </Route>
-                        <Route exact path="/password/secret">
-                            <SecretPasswordPage />
-                        </Route>
-                        <Route exact path="/password/restore">
-                            <RestorePasswordPage />
-                        </Route>
-                    </Switch>
-                </Router>
+                <AuthProvider>
+                    <App />
+                </AuthProvider>
             </SnackbarProvider>
         </LocalizationProvider>
     </React.StrictMode>,

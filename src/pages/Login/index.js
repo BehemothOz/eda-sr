@@ -3,12 +3,15 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { TextField, Paper, Button, Stack, Typography } from '@mui/material';
 import { CenterScreen } from 'components/layout/CenterScreen';
 import { useMessage } from 'hooks/useMessage';
+import { useAuthActions } from 'providers/AuthProvider';
 
 import { api } from '../../api';
 
 export const LoginPage = () => {
     const history = useHistory();
     const msg = useMessage();
+
+    const { setUserID } = useAuthActions();
 
     const {
         control,
@@ -18,15 +21,18 @@ export const LoginPage = () => {
 
     const onSubmit = async values => {
         try {
-            const result = await api.auth(values);
-            result.token && msg.success('Success operation');
+            const userID = await api.auth(values);
+            setUserID(userID);
+
+            // userID && msg.success('Success operation'); For check
+            history.push('/profile');
         } catch (error) {
             msg.error(error.message);
         }
     };
 
     const onAnonymousSubmit = () => {
-        history.push('/');
+        history.push('/profile');
     };
 
     return (
@@ -40,7 +46,7 @@ export const LoginPage = () => {
                         <Controller
                             name="login"
                             control={control}
-                            defaultValue=""
+                            defaultValue="aa"
                             render={({ field }) => (
                                 <TextField
                                     label="Login"
@@ -61,7 +67,7 @@ export const LoginPage = () => {
                         <Controller
                             name="password"
                             control={control}
-                            defaultValue=""
+                            defaultValue="aa"
                             render={({ field }) => (
                                 <TextField
                                     type="password"

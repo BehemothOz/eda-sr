@@ -2,6 +2,10 @@ import { forwardRef } from 'react';
 import { Alert, AlertTitle, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
+/*
+    TODO: replace the green color with this one - #4caf50
+*/
+
 export const Message = forwardRef((props, ref) => {
     const { type = 'default', title, content, onClose, ...other } = props;
 
