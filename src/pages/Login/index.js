@@ -24,7 +24,6 @@ export const LoginPage = () => {
             const userID = await api.auth(values);
             setUserID(userID);
 
-            // userID && msg.success('Success operation'); For check
             history.push('/profile');
         } catch (error) {
             msg.error(error.message);

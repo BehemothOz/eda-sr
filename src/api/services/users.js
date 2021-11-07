@@ -2,7 +2,7 @@ import { generateID } from '../adapters/generateID';
 
 const initialUser = [['000-S', { login: 'aa' }]];
 
-export class Users {
+class Users {
     constructor() {
         this.users = new Map(initialUser);
     }
@@ -16,15 +16,13 @@ export class Users {
     }
 
     checkByLogin({ login }) {
-        const user = Array.from(this.users.entries()).find(([_, user]) => user.login === login);
+        const [userID] = Array.from(this.users.entries()).find(([_, user]) => user.login === login);
 
-        if (!user) {
+        if (!userID) {
             throw new Error('Invalid login or password');
         }
 
-        const [userID] = user;
-
-        this.logs('checkByLogin', user);
+        this.logs('check_by_login', userID);
         return userID;
     }
 
@@ -35,6 +33,7 @@ export class Users {
             throw new Error('User not found');
         }
 
+        this.logs('get_user', user);
         return user;
     }
 
@@ -46,3 +45,5 @@ export class Users {
         console.groupEnd();
     }
 }
+
+export const usersServices = new Users();
