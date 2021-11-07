@@ -36,6 +36,10 @@ const getUser = async userID => {
     return await delayWithRequest(0, () => usersService.get(userID));
 };
 
+const updateUser = async (userID, data) => {
+    return await delayWithRequest(0, () => usersService.update(userID, data));
+};
+
 const getTasks = async () => {
     return await delayWithRequest(0, () => tasksService.getAll());
 };
@@ -56,6 +60,7 @@ export const api = {
     auth,
     register,
     getUser,
+    updateUser,
 
     getTasks,
     createTask,

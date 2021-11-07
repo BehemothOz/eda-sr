@@ -1,6 +1,19 @@
 import { generateID } from '../adapters/generateID';
 
-const initialUser = [['000-S', { login: 'aa' }]];
+const initialUser = [
+    [
+        '000-S',
+        {
+            id: '000-S',
+            login: 'some@sm.bg',
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            secretQuestion: 1,
+            secretAnswer: '2',
+        },
+    ],
+];
 
 class Users {
     constructor() {
@@ -37,7 +50,12 @@ class Users {
         return user;
     }
 
-    update() {}
+    update(id, data) {
+        this.users.set(id, { id, ...data });
+
+        this.logs('get_user_after_update', this.users);
+        return id;
+    }
 
     logs(type, data) {
         console.group('%c' + type, 'color: red;');

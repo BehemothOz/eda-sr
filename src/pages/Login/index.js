@@ -45,7 +45,7 @@ export const LoginPage = () => {
                         <Controller
                             name="login"
                             control={control}
-                            defaultValue="aa"
+                            defaultValue="some@sm.bg"
                             render={({ field }) => (
                                 <TextField
                                     label="Login"

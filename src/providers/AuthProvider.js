@@ -1,7 +1,6 @@
-import { createContext, useContext, useState, useMemo, useEffect } from 'react';
+import { createContext, useContext, useState, useMemo, useEffect, useCallback } from 'react';
 import { sessionService } from 'api/services/session';
 import { api } from 'api';
-import { useCallback } from 'react';
 
 const AuthStateContext = createContext();
 const AuthActionsContext = createContext();
@@ -26,7 +25,7 @@ export const AuthProvider = props => {
     }, [userID]);
 
     /*
-        TODO: bunch state if async
+        TODO: unstable_batchedupdates if async
     */
     const resetStateFromProvider = useCallback(() => {
         setUserID();
