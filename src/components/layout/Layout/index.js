@@ -2,10 +2,13 @@ import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import { useAuth } from 'providers/AuthProvider';
 
 export const Layout = props => {
     const { children } = props;
     const [anchorEl, setAnchorEl] = useState(null);
+
+    const user = useAuth();
 
     const handleMenuClick = event => {
         setAnchorEl(event.currentTarget);
@@ -23,12 +26,14 @@ export const Layout = props => {
                         to="/"
                         component={RouterLink}
                         variant="h6"
-                        sx={{ flexGrow: 1, textDecoration: 'none' }}
+                        sx={{ textDecoration: 'none' }}
                         color="white"
                     >
                         Some title
                     </Typography>
-
+                    <Typography variant="body2" component="span" sx={{ flexGrow: 1, textAlign: 'right', px: 2 }}>
+                        {user.login || 'anonymous'}
+                    </Typography>
                     <IconButton
                         aria-label="account of current user"
                         aria-controls="menu-appbar"

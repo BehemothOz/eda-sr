@@ -29,12 +29,13 @@ export const AuthProvider = props => {
     const [user, setUser] = useState({});
 
     useEffect(() => {
-        const token = sessionService.getUserID();
+        const userIDFromStorage = sessionService.getUserID();
 
-        if (token) {
+        if (userIDFromStorage) {
             const request = async () => {
-                const us = await api.getUser(token);
-                console.log(us);
+                const result = await api.getUser(userIDFromStorage);
+                console.log(result);
+                setUser(result);
             };
 
             request();
@@ -48,6 +49,8 @@ export const AuthProvider = props => {
         }),
         []
     );
+
+    // if (isLoading || isIdle) return 'loading';
 
     return (
         <AuthStateContext.Provider value={user}>

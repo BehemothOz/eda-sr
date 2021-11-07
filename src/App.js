@@ -8,13 +8,7 @@ import { RestorePasswordPage } from './pages/Password/Restore';
 import { HomePage } from './pages/Home';
 import { ProfilePage } from './pages/Profile';
 
-import { useAuth } from 'providers/AuthProvider';
-
 export const App = () => {
-    const user = useAuth();
-
-    console.log('App user', user);
-
     return (
         <Router>
             <Switch>
