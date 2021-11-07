@@ -1,23 +1,7 @@
 import { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { sessionService } from 'api/services/session';
 import { api } from 'api';
-
-// async function bootstrapAppData() {
-//     let user = null;
-
-//     const token = await auth.getToken();
-//     if (token) {
-//         const data = await client('bootstrap', { token });
-//         queryCache.setQueryData('list-items', data.listItems, {
-//             staleTime: 5000,
-//         });
-//         for (const listItem of data.listItems) {
-//             setQueryDataForBook(listItem.book);
-//         }
-//         user = data.user;
-//     }
-//     return user;
-// }
+import { useCallback } from 'react';
 
 const AuthStateContext = createContext();
 const AuthActionsContext = createContext();
@@ -34,7 +18,6 @@ export const AuthProvider = props => {
         if (userIDFromStorage) {
             const request = async () => {
                 const result = await api.getUser(userIDFromStorage);
-                console.log(result);
                 setUser(result);
             };
 
@@ -42,10 +25,24 @@ export const AuthProvider = props => {
         }
     }, [userID]);
 
+    /*
+        TODO: bunch state if async
+    */
+    const resetStateFromProvider = useCallback(() => {
+        setUserID();
+        setUser({});
+    }, []);
+
+    const logout = useCallback(() => {
+        sessionService.reset();
+        resetStateFromProvider();
+    }, []);
+
     const actions = useMemo(
         () => ({
             setUser,
             setUserID,
+            logout,
         }),
         []
     );

@@ -11,6 +11,10 @@ class Session {
         this.userID = userID;
         return userID;
     }
+
+    reset() {
+        this.userID = null;
+    }
 }
 
 export const sessionService = new Session();
