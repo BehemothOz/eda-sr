@@ -56,4 +56,4 @@ class Tasks {
     }
 }
 
-export const tasksServices = new Tasks();
+export const tasksService = new Tasks();

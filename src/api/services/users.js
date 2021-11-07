@@ -46,4 +46,4 @@ class Users {
     }
 }
 
-export const usersServices = new Users();
+export const usersService = new Users();
