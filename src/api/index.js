@@ -32,6 +32,10 @@ const register = async data => {
     return await delayWithRequest(0, () => usersService.register(data));
 };
 
+const checkUser = async data => {
+    return await delayWithRequest(0, () => usersService.checkByLogin(data));
+}
+
 const getUser = async userID => {
     return await delayWithRequest(0, () => usersService.get(userID));
 };
@@ -59,6 +63,7 @@ const deleteTask = async id => {
 export const api = {
     auth,
     register,
+    checkUser,
     getUser,
     updateUser,
 

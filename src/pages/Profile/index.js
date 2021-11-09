@@ -22,7 +22,7 @@ const ProfileForm = props => {
     const { setUser } = useAuthActions();
     const msg = useMessage();
 
-    console.log('ProfileForm');
+    // console.log('ProfileForm');
 
     const onSubmit = async value => {
         console.log('form data after submit: ', value);
