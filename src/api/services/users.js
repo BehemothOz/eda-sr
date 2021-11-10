@@ -39,6 +39,8 @@ class Users {
         return userID;
     }
 
+    checkBySecret() {}
+
     get(id) {
         const user = this.users.get(id);
 

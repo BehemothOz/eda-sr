@@ -1,19 +1,22 @@
 import { useForm, Controller } from 'react-hook-form';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
-import { TextField, Paper, Button, Stack, Typography } from '@mui/material';
+import { TextField, Paper, Button, Stack, Typography, Box } from '@mui/material';
 
 import { CenterScreen } from 'components/layout/CenterScreen';
-import { QuestionSelect } from 'components/inputs/QuestionSelect';
+import { questionList } from 'components/inputs/QuestionSelect';
 
 export const SecretPasswordForm = props => {
     const { data, onBack } = props;
+    const { secretQuestion } = data;
 
     const history = useHistory();
-    const { control, handleSubmit } = useForm({ defaultValues: { question: data.secretQuestion } });
+    const { control, handleSubmit } = useForm();
+
+    const question = questionList.reduce((acc, it) => (it.value === secretQuestion ? it.label : acc), '');
 
     const onSubmit = async data => {
         console.log('form data after submit: ', data);
-        history.push('/password/restore');
+        // history.push('/password/restore');
     };
 
     return (
@@ -24,12 +27,9 @@ export const SecretPasswordForm = props => {
                 </Typography>
                 <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
                     <Stack spacing={2}>
-                        <Controller
-                            name="question"
-                            control={control}
-                            defaultValue="1"
-                            render={({ field }) => <QuestionSelect label="Question" fullWidth required disabled {...field} />}
-                        />
+                        <Box>
+                            Question: <i>{question}</i>?
+                        </Box>
                         <Controller
                             name="answer"
                             control={control}
