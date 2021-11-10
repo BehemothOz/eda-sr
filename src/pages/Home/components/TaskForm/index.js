@@ -29,17 +29,6 @@ import { api } from 'api';
     actualEndTime
 */
 
-const useFormRequest = (mode, onSuccess, onError) => {
-    const { run: create } = useResource(api.createTask, { onSuccess, onError });
-    const { run: update } = useResource(api.updateTask, { onSuccess, onError });
-
-    return mode === MODE_EDIT ? update : create;
-};
-
-/*
-    useForm({ defaultValues: { name: value, ... } })
-*/
-
 const DeleteButton = props => {
     const { id, callAfterSuccessSubmit, onClose } = props;
 
@@ -71,27 +60,26 @@ const TaskFormView = props => {
     const { control, handleSubmit } = useForm();
     const message = useMessage();
 
-    const request = useFormRequest(
-        mode,
-        () => {
-            message.success(`Success operation`);
+    const isEdit = mode === MODE_EDIT;
+
+    const onSubmit = async data => {
+        console.log('form data after submit: ', data);
+
+        const body = {
+            title: '1212',
+            from: new Date(),
+            to: new Date(),
+        };
+
+        try {
+            await (isEdit ? api.updateTask(id, body) : api.createTask(body));
 
             callAfterSuccessSubmit();
             onClose();
-        },
-        () => {
+        } catch (error) {
+            console.error(error);
             message.error(`Error operation`);
         }
-    );
-
-    const isEdit = mode === MODE_EDIT;
-
-    const onSubmit = data => {
-        console.log('form data after submit: ', data);
-
-        isEdit
-            ? request(id, { title: '1212', from: new Date(), to: new Date() })
-            : request({ title: '1212', from: new Date(), to: new Date() });
     };
 
     const onError = error => console.log('Uncaught error', error);
