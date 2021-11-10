@@ -4,10 +4,6 @@ import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem } from '@mui/ma
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useAuth, useAuthActions } from 'providers/AuthProvider';
 
-const capitalizeFirstLetter = str => {
-    return str.charAt(0).toUpperCase();
-};
-
 const UserMenu = props => {
     const { anchorEl, onClose } = props;
 
@@ -71,8 +67,7 @@ export const Layout = props => {
                         Some title
                     </Typography>
                     <Typography variant="body2" component="span" sx={{ flexGrow: 1, textAlign: 'right', px: 2 }}>
-                        {user.login || ''} ({user.firstName && capitalizeFirstLetter(user.firstName)}.{' '}
-                        {user.lastName && capitalizeFirstLetter(user.lastName)}.)
+                        {user.login || ''}
                     </Typography>
                     <IconButton
                         aria-label="account of current user"
