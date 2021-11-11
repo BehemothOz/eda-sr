@@ -34,10 +34,18 @@ const register = async data => {
 
 const checkUser = async data => {
     return await delayWithRequest(0, () => usersService.checkByLogin(data));
-}
+};
+
+const checkUserBySecret = async data => {
+    return await delayWithRequest(0, () => usersService.checkBySecret(data));
+};
 
 const getUser = async userID => {
     return await delayWithRequest(0, () => usersService.get(userID));
+};
+
+const getUserToVerify = async userID => {
+    return await delayWithRequest(0, () => usersService.getToVerify(userID));
 };
 
 const updateUser = async (userID, data) => {
@@ -63,8 +71,10 @@ const deleteTask = async id => {
 export const api = {
     auth,
     register,
+    checkUserBySecret,
     checkUser,
     getUser,
+    getUserToVerify,
     updateUser,
 
     getTasks,

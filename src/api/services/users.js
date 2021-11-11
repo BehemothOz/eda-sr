@@ -22,44 +22,70 @@ class Users {
 
     register(data) {
         const id = generateID.get();
-        this.users.set(id, data);
+        this.users.set(id, { id, ...data });
 
-        this.logs('regiser', [...this.users]);
+        this._logs('regiser', this.users);
         return id;
     }
 
     checkByLogin({ login }) {
-        const [userID] = Array.from(this.users.entries()).find(([_, user]) => user.login === login);
+        const [userID] = this._find(([_, user]) => user.login === login);
 
         if (!userID) {
             throw new Error('Invalid login or password');
         }
 
-        this.logs('check_by_login', userID);
+        this._logs('check_by_login', userID);
         return userID;
     }
 
-    checkBySecret() {}
+    checkBySecret({ login, secretAnswer }) {
+        const [userID] = this._find(([_, user]) => user.login === login && user.secretAnswer === secretAnswer);
 
-    get(id) {
-        const user = this.users.get(id);
+        this._logs('check_by_secret', userID);
+        return userID;
+    }
+
+    get(userID) {
+        const user = this.users.get(userID);
 
         if (!user) {
             throw new Error('User not found');
         }
 
-        this.logs('get_user', user);
+        this._logs('get_user', user);
         return user;
     }
 
-    update(id, data) {
-        this.users.set(id, { id, ...data });
+    getToVerify(userID) {
+        const user = this.users.get(userID);
 
-        this.logs('get_user_after_update', this.users);
-        return id;
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        const res = {
+            id: user.id,
+            login: user.login,
+            secretQuestion: user.secretQuestion,
+        };
+
+        this._logs('get_user_to_verify', res);
+        return res;
     }
 
-    logs(type, data) {
+    update(userID, data) {
+        this.users.set(userID, { id: userID, ...data });
+
+        this._logs('get_user_after_update', this.users);
+        return userID;
+    }
+
+    _find(cb) {
+        return Array.from(this.users.entries()).find(cb);
+    }
+
+    _logs(type, data) {
         console.group('%c' + type, 'color: red;');
         console.log('some data about users:', data);
         console.groupEnd();

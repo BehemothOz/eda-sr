@@ -4,20 +4,32 @@ import { TextField, Paper, Button, Stack, Typography, Box } from '@mui/material'
 
 import { CenterScreen } from 'components/layout/CenterScreen';
 import { questionList } from 'components/inputs/QuestionSelect';
+import { useMessage } from 'hooks/useMessage';
+import { api } from 'api';
 
 export const SecretPasswordForm = props => {
     const { data, onBack } = props;
     const { secretQuestion } = data;
 
     const history = useHistory();
+    const msg = useMessage();
+
     const { control, handleSubmit } = useForm();
 
-    const question = questionList.reduce((acc, it) => (it.value === secretQuestion ? it.label : acc), '');
+    const onSubmit = async value => {
+        console.log('form data after submit: ', value);
 
-    const onSubmit = async data => {
-        console.log('form data after submit: ', data);
-        // history.push('/password/restore');
+        try {
+            await api.checkUserBySecret({ login: data.login, ...value });
+
+            msg.success('Success operation');
+            history.push('/password/restore');
+        } catch (error) {
+            msg.error('Error operation');
+        }
     };
+
+    const question = questionList.reduce((acc, it) => (it.value === secretQuestion ? it.label : acc), '');
 
     return (
         <CenterScreen>
@@ -31,7 +43,7 @@ export const SecretPasswordForm = props => {
                             Question: <i>{question}</i>?
                         </Box>
                         <Controller
-                            name="answer"
+                            name="secretAnswer"
                             control={control}
                             defaultValue=""
                             render={({ field }) => <TextField label="Answer" fullWidth {...field} />}

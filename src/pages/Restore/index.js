@@ -9,8 +9,8 @@ export const RestorePasswordPage = () => {
 
     const { control, handleSubmit } = useForm();
 
-    const onSubmit = data => {
-        console.log('form data after submit: ', data);
+    const onSubmit = value => {
+        console.log('form data after submit: ', value);
         history.push('/login');
     };
 

@@ -16,7 +16,7 @@ export const RestorePasswordForm = props => {
 
         try {
             const userID = await api.checkUser(data);
-            const user = await api.getUser(userID);
+            const user = await api.getUserToVerify(userID);
 
             callAfterSuccessSubmit && callAfterSuccessSubmit(user);
         } catch (error) {
