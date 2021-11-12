@@ -1,6 +1,6 @@
-import { Users } from './services/users';
-
-const userService = new Users();
+import { sessionService } from './services/session';
+import { usersService } from './services/users';
+import { tasksService } from './services/tasks';
 
 /*
     TODO:
@@ -23,37 +23,62 @@ const delayWithRequest = (time, syncRequest) => {
 };
 
 const auth = async data => {
-    return await delayWithRequest(0, () => userService.checkByID(data));
+    return await delayWithRequest(0, () => usersService.checkByLogin(data)).then(userID =>
+        sessionService.setUserID(userID)
+    );
 };
 
 const register = async data => {
-    return await delayWithRequest(0, () => userService.register(data));
+    return await delayWithRequest(0, () => usersService.register(data));
 };
 
-const search = () => {
-    const params = { q: '', f: null };
+const checkUser = async data => {
+    return await delayWithRequest(0, () => usersService.checkByLogin(data));
+};
 
-    const request = async atr => {
-        console.log('search', atr);
-        await delayWithRequest(1000, {
-            data: [],
-        });
-    };
+const checkUserBySecret = async data => {
+    return await delayWithRequest(0, () => usersService.checkBySecret(data));
+};
 
-    return {
-        searchQuery: async q => {
-            params.q = q;
-            return await request(params);
-        },
-        searchFilter: async f => {
-            params.f = f;
-            return await request(params);
-        },
-    };
+const getUser = async userID => {
+    return await delayWithRequest(0, () => usersService.get(userID));
+};
+
+const getUserToVerify = async userID => {
+    return await delayWithRequest(0, () => usersService.getToVerify(userID));
+};
+
+const updateUser = async (userID, data) => {
+    return await delayWithRequest(0, () => usersService.update(userID, data));
+};
+
+const getTasks = async () => {
+    return await delayWithRequest(0, () => tasksService.getAll());
+};
+
+const createTask = async data => {
+    return await delayWithRequest(0, () => tasksService.create(data));
+};
+
+const updateTask = async (id, data) => {
+    return await delayWithRequest(0, () => tasksService.update(id, data));
+};
+
+const deleteTask = async id => {
+    return await delayWithRequest(0, () => tasksService.delete(id));
 };
 
 export const api = {
     auth,
     register,
-    s: search(),
+    checkUserBySecret,
+    checkUser,
+    getUser,
+    getUserToVerify,
+    updateUser,
+
+    getTasks,
+    createTask,
+    updateTask,
+    deleteTask,
 };
