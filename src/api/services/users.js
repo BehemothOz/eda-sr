@@ -15,7 +15,7 @@ class Users {
     }
 
     checkByLogin({ login }) {
-        const user = this._find(([_, user]) => console.log(user) || user.login === login);
+        const user = this._find(([_, user]) => user.login === login);
 
         if (!user) {
             throw new Error('Invalid login or password');
