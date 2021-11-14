@@ -20,7 +20,7 @@ export const repeatable = (func, options = {}) => {
             if (count < max && statusCodes.includes(error.status)) {
                 onError && onError(error);
 
-                delay(duration);
+                await delay(duration);
                 count += 1;
                 return retry(args);
             }

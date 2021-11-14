@@ -52,29 +52,25 @@ const TaskFormView = props => {
     const { mode, data = {}, callAfterSuccessSubmit, onClose } = props;
     const { id, title } = data;
 
-    console.log('TASK FORM RENDER COUNT');
+    /*
+        WTF? Why different logs (count logs)?
+        console.log('TASK FORM RENDER COUNT') vs console.count('TASK FORM RENDER COUNT');
+    */
 
     const { control, handleSubmit } = useForm();
     const message = useMessage();
 
     const isEdit = mode === MODE_EDIT;
 
-    const onSubmit = async data => {
-        console.log('form data after submit: ', data);
-
-        const body = {
-            title: '1212',
-            from: new Date(),
-            to: new Date(),
-        };
+    const onSubmit = async value => {
+        console.log('form data after submit: ', value);
 
         try {
-            await (isEdit ? api.updateTask(id, body) : api.createTask(body));
+            await (isEdit ? api.updateTask(id, value) : api.createTask(value));
 
             callAfterSuccessSubmit();
             onClose();
         } catch (error) {
-            console.error(error);
             message.error(`Error operation`);
         }
     };

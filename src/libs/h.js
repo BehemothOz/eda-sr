@@ -1,9 +1,15 @@
 import { useRef, useCallback } from 'react';
 
 /*
-  TODO:
-  - mb create ref for cb?
-  - change ms outside?
+    TODO:
+    - mb create ref for cb?
+    - change ms outside?
+*/
+
+/*
+    for react problem:
+    - race conditions
+    - unmount -> warning
 */
 
 export const useDebounce = (cb, ms) => {

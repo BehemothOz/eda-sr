@@ -1,19 +1,5 @@
 import { generateID } from '../adapters/generateID';
-
-const initialUser = [
-    [
-        '000-S',
-        {
-            id: '000-S',
-            login: 'some@sm.bg',
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            secretQuestion: 1,
-            secretAnswer: '2',
-        },
-    ],
-];
+import { initialUser } from './__mock';
 
 class Users {
     constructor() {
