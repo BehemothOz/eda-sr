@@ -25,7 +25,7 @@ export const RestorePasswordForm = props => {
             callAfterSuccessSubmit && callAfterSuccessSubmit(user);
         } catch (error) {
             console.log(error);
-            msg.error(error);
+            msg.error('Error operation');
         }
     };
 
@@ -40,7 +40,7 @@ export const RestorePasswordForm = props => {
                         <Controller
                             name="login"
                             control={control}
-                            defaultValue="some@sm.bg"
+                            defaultValue=""
                             render={({ field }) => (
                                 <TextField
                                     label="Login"

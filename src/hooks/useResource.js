@@ -43,6 +43,7 @@ function reducer(state, action) {
     TODO:
         - link for async func
         - clear state
+        - add reset after request (unmount)
 */
 
 export const useResource = (asyncFunc, options = {}) => {

@@ -37,9 +37,8 @@ export const HomePage = () => {
             <TaskFilter />
 
             <Container maxWidth="lg" style={{ paddingTop: 16, paddingBottom: 16 }}>
-                {data.length ? (
-                    <Tasks data={data} onOpen={modalForm.onOpenEdit} />
-                ) : (
+                {status === 'resolved' && data.length !== 0 && <Tasks data={data} onOpen={modalForm.onOpenEdit} />}
+                {status === 'resolved' && data.length === 0 && (
                     <Box sx={{ p: 2, textAlign: 'center' }}>Create first task</Box>
                 )}
             </Container>

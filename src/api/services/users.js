@@ -15,11 +15,13 @@ class Users {
     }
 
     checkByLogin({ login }) {
-        const [userID] = this._find(([_, user]) => user.login === login);
+        const user = this._find(([_, user]) => console.log(user) || user.login === login);
 
-        if (!userID) {
+        if (!user) {
             throw new Error('Invalid login or password');
         }
+
+        const [userID] = user;
 
         this._logs('check_by_login', userID);
         return userID;

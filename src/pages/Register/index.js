@@ -79,7 +79,7 @@ export const RegisterPage = () => {
                         <Controller
                             name="secretQuestion"
                             control={control}
-                            defaultValue="1"
+                            defaultValue={1}
                             render={({ field }) => (
                                 <QuestionSelect label="Question" fullWidth required withNone={false} {...field} />
                             )}

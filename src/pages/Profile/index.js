@@ -7,7 +7,7 @@ import { useAuth } from 'providers/AuthProvider';
 import { ProfileForm } from './components/ProfileForm';
 
 const RedirectButton = props => {
-    const { to = '/' } = props;
+    const { to = '/login' } = props;
 
     return (
         <Button color="primary" variant="outlined" to={to} component={RouterLink}>
