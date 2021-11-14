@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Container, Drawer, Button } from '@mui/material';
+import { Container, Drawer, Button, Box } from '@mui/material';
 import { Layout } from 'components/layout/Layout';
 import { SearchInput } from 'components/inputs/SearchInput';
 import { useModalForm } from 'hooks/useModalForm';
@@ -37,7 +37,11 @@ export const HomePage = () => {
             <TaskFilter />
 
             <Container maxWidth="lg" style={{ paddingTop: 16, paddingBottom: 16 }}>
-                <Tasks data={data} onOpen={modalForm.onOpenEdit} />
+                {data.length ? (
+                    <Tasks data={data} onOpen={modalForm.onOpenEdit} />
+                ) : (
+                    <Box sx={{ p: 2, textAlign: 'center' }}>Create first task</Box>
+                )}
             </Container>
 
             <Drawer open={formState.visible} ModalProps={{ closeAfterTransition: true }} onClose={modalForm.onClose}>
