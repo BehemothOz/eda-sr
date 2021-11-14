@@ -1,5 +1,5 @@
 import { typeList } from 'components/inputs/TypeSelect';
-// import { typeList } from 'components/inputs/TypeSelect';
+import { questionList } from 'components/inputs/QuestionSelect';
 
 /*
     Used for select.
@@ -11,3 +11,4 @@ export const getLabelByValue = list => value => {
 };
 
 export const getLabelForTypeList = getLabelByValue(typeList);
+export const getLabelForQuestionList = getLabelByValue(questionList);
