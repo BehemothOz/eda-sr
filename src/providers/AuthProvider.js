@@ -15,12 +15,12 @@ export const AuthProvider = props => {
         const userIDFromStorage = sessionService.getUserID();
 
         if (userIDFromStorage) {
-            const request = async () => {
+            const getUser = async () => {
                 const result = await api.getUser(userIDFromStorage);
                 setUser(result);
             };
 
-            request();
+            getUser();
         }
     }, [userID]);
 
@@ -35,7 +35,7 @@ export const AuthProvider = props => {
     const logout = useCallback(() => {
         sessionService.reset();
         resetStateFromProvider();
-    }, []);
+    }, [resetStateFromProvider]);
 
     const actions = useMemo(
         () => ({
@@ -43,7 +43,7 @@ export const AuthProvider = props => {
             setUserID,
             logout,
         }),
-        []
+        [logout]
     );
 
     // if (isLoading || isIdle) return 'loading';
