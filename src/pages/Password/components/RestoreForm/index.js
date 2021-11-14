@@ -9,7 +9,11 @@ export const RestorePasswordForm = props => {
     const { callAfterSuccessSubmit } = props;
 
     const msg = useMessage();
-    const { control, handleSubmit } = useForm();
+    const {
+        control,
+        formState: { errors },
+        handleSubmit,
+    } = useForm();
 
     const onSubmit = async data => {
         console.log('form data after submit: ', data);
@@ -41,7 +45,8 @@ export const RestorePasswordForm = props => {
                                 <TextField
                                     label="Login"
                                     fullWidth
-                                    error={false}
+                                    required
+                                    error={Boolean(errors[field.name])}
                                     inputProps={{
                                         autoComplete: 'new-password',
                                         form: {
@@ -51,6 +56,7 @@ export const RestorePasswordForm = props => {
                                     {...field}
                                 />
                             )}
+                            rules={{ required: true }}
                         />
                         <Stack spacing={1} direction="row">
                             <Button variant="contained" color="primary" type="submit">
