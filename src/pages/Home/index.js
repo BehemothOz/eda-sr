@@ -16,7 +16,7 @@ import { Tasks } from './components/Tasks';
 
 export const HomePage = () => {
     const { data, status, run: getTasks } = useResource(api.getTasks, { initialData: [] });
-    // console.log('STATUS tasks', status, data);
+    console.log('STATUS tasks', status);
 
     const modalForm = useModalForm();
     const { state: formState } = modalForm;

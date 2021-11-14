@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Stack, Container } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
-import { api } from 'api';
 
 import { TypeSelect } from 'components/inputs/TypeSelect';
 import { UserSelect } from 'components/inputs/UserSelect';
@@ -12,7 +11,6 @@ export const TaskFilter = () => {
 
     const onSubmit = async data => {
         console.log('onSubmit TaskFilter', data);
-        await api.s.searchFilter(data);
     };
 
     useEffect(() => {
