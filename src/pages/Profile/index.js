@@ -17,12 +17,14 @@ const ProfileForm = props => {
     const { data } = props;
     const { id, ...initialValues } = data;
 
-    const { control, handleSubmit } = useForm({ defaultValues: initialValues });
+    const {
+        control,
+        formState: { errors },
+        handleSubmit,
+    } = useForm({ defaultValues: initialValues });
 
     const { setUser } = useAuthActions();
     const msg = useMessage();
-
-    // console.log('ProfileForm');
 
     const onSubmit = async value => {
         console.log('form data after submit: ', value);
@@ -72,7 +74,17 @@ const ProfileForm = props => {
                         name="secretAnswer"
                         control={control}
                         defaultValue=""
-                        render={({ field }) => <TextField label="Answer" size="small" fullWidth {...field} />}
+                        render={({ field }) => (
+                            <TextField
+                                label="Answer"
+                                size="small"
+                                required
+                                error={Boolean(errors[field.name])}
+                                fullWidth
+                                {...field}
+                            />
+                        )}
+                        rules={{ required: true }}
                     />
 
                     <Button variant="contained" color="primary" type="submit">
@@ -86,7 +98,7 @@ const ProfileForm = props => {
 
 export const ProfilePage = () => {
     const user = useAuth();
-    console.log('ProfilePage');
+
     return (
         <Layout>
             <Container maxWidth="xs" sx={{ p: 2 }}>
