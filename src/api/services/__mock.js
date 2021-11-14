@@ -20,7 +20,7 @@ export const initialTasks = [
         type: '',
         plannedStartTime: new Date(2021, 9, 1),
         plannedEndTime: new Date(2021, 9, 25),
-        actualStartTime: '',
-        actualEndTime: '',
+        actualStartTime: null,
+        actualEndTime: null,
     },
 ];

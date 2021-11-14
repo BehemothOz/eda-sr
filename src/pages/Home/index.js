@@ -15,15 +15,15 @@ import { Tasks } from './components/Tasks';
 */
 
 export const HomePage = () => {
-    const { data, status, run: request } = useResource(api.getTasks, { initialData: [] });
+    const { data, status, run: getTasks } = useResource(api.getTasks, { initialData: [] });
     // console.log('STATUS tasks', status, data);
 
     const modalForm = useModalForm();
     const { state: formState } = modalForm;
 
     useEffect(() => {
-        request();
-    }, [request]);
+        getTasks();
+    }, [getTasks]);
 
     return (
         <Layout>
@@ -40,11 +40,11 @@ export const HomePage = () => {
                 <Tasks data={data} onOpen={modalForm.onOpenEdit} />
             </Container>
 
-            <Drawer open={formState.visible} onClose={modalForm.onClose}>
+            <Drawer open={formState.visible} ModalProps={{ closeAfterTransition: true }} onClose={modalForm.onClose}>
                 <TaskForm
                     mode={formState.mode}
                     data={formState.payload}
-                    callAfterSuccessSubmit={request}
+                    callAfterSuccessSubmit={getTasks}
                     onClose={modalForm.onClose}
                 />
             </Drawer>
