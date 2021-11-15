@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { TextField, Button, Stack, Typography } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import Box from '@mui/material/Box';
@@ -28,13 +28,19 @@ import { api } from 'api';
 
 const DeleteButton = props => {
     const { id, callAfterSuccessSubmit, onClose } = props;
+    const message = useMessage();
 
     const { run: deleteTask } = useResource(api.deleteTask, {
         onSuccess: () => {
             callAfterSuccessSubmit();
             onClose();
+
+            message.success('Success');
         },
-        onError: error => console.log(error),
+        onError: error => {
+            console.log(error);
+            message.error('Success');
+        },
     });
 
     const handleClick = () => {
@@ -50,31 +56,33 @@ const DeleteButton = props => {
 
 const TaskFormView = props => {
     const { mode, data = {}, callAfterSuccessSubmit, onClose } = props;
-    const { id, title } = data;
+    const { id, ...initialValue } = data;
 
-    console.log('TASK FORM RENDER COUNT');
+    /*
+        WTF? Why different logs (count logs)?
+        console.log('TASK FORM RENDER COUNT') vs console.count('TASK FORM RENDER COUNT');
+    */
 
-    const { control, handleSubmit } = useForm();
+    const {
+        control,
+        formState: { errors },
+        handleSubmit,
+    } = useForm({ defaultValues: initialValue });
     const message = useMessage();
 
     const isEdit = mode === MODE_EDIT;
 
-    const onSubmit = async data => {
-        console.log('form data after submit: ', data);
-
-        const body = {
-            title: '1212',
-            from: new Date(),
-            to: new Date(),
-        };
+    const onSubmit = async value => {
+        console.log('form data after submit: ', value);
 
         try {
-            await (isEdit ? api.updateTask(id, body) : api.createTask(body));
+            await (isEdit ? api.updateTask(id, value) : api.createTask(value));
 
             callAfterSuccessSubmit();
             onClose();
+
+            message.success(`Success operation`);
         } catch (error) {
-            console.error(error);
             message.error(`Error operation`);
         }
     };
@@ -90,23 +98,18 @@ const TaskFormView = props => {
                     <Controller
                         name="title"
                         control={control}
-                        defaultValue={title || ''}
+                        defaultValue=""
                         render={({ field }) => (
                             <TextField
                                 label="Title"
+                                size="small"
                                 fullWidth
                                 required
-                                error={false}
-                                size="small"
-                                inputProps={{
-                                    autoComplete: 'new-password',
-                                    form: {
-                                        autoComplete: 'off',
-                                    },
-                                }}
+                                error={Boolean(errors[field.name])}
                                 {...field}
                             />
                         )}
+                        rules={{ required: true }}
                     />
                     <Controller
                         name="type"
@@ -120,13 +123,29 @@ const TaskFormView = props => {
                             name="plannedStartTime"
                             control={control}
                             defaultValue={null}
-                            render={({ field }) => <DatePicker label="Planned Start Time" {...field} />}
+                            render={({ field }) => (
+                                <DatePicker
+                                    label="Planned Start Time"
+                                    required
+                                    error={Boolean(errors[field.name])}
+                                    {...field}
+                                />
+                            )}
+                            rules={{ required: true }}
                         />
                         <Controller
                             name="plannedEndTime"
                             control={control}
                             defaultValue={null}
-                            render={({ field }) => <DatePicker label="Planned End Time" {...field} />}
+                            render={({ field }) => (
+                                <DatePicker
+                                    label="Planned End Time"
+                                    required
+                                    error={Boolean(errors[field.name])}
+                                    {...field}
+                                />
+                            )}
+                            rules={{ required: true }}
                         />
                     </Stack>
 

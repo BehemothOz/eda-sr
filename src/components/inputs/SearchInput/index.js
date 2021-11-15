@@ -4,17 +4,12 @@ import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 
-// TODO: move
-import { api } from 'api';
-
 export function SearchInput() {
     const inputRef = useRef();
 
     const onSearch = async event => {
         event.preventDefault();
         console.log('this is value from input-search:', inputRef.current.value);
-
-        await api.s.searchQuery(inputRef.current.value);
     };
 
     return (

@@ -58,7 +58,7 @@ export const Layout = props => {
             <AppBar position="static">
                 <Toolbar>
                     <Typography
-                        to="/"
+                        to="/home"
                         component={RouterLink}
                         variant="h6"
                         sx={{ textDecoration: 'none' }}

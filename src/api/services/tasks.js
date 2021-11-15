@@ -1,4 +1,5 @@
 import { generateID } from '../adapters/generateID';
+import { initialTasks } from './__mock';
 
 /*
     Testing Singleton:
@@ -20,14 +21,9 @@ import { generateID } from '../adapters/generateID';
     }
 */
 
-const initialData = [
-    { id: 1, title: 'Cook pasta with chicken', from: new Date(2021, 9, 1), to: new Date(2021, 9, 25) },
-    { id: 2, title: 'Go to the store for glasses', from: new Date(2021, 9, 1), to: new Date(2021, 9, 25) },
-];
-
 class Tasks {
     constructor() {
-        this.tasks = initialData;
+        this.tasks = initialTasks;
     }
 
     getAll() {

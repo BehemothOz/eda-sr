@@ -6,12 +6,13 @@ import { PasswordPage } from './pages/Password';
 import { RestorePasswordPage } from './pages/Restore';
 import { HomePage } from './pages/Home';
 import { ProfilePage } from './pages/Profile';
+import { NotFoundPage } from './pages/404';
 
 export const App = () => {
     return (
         <Router>
             <Switch>
-                <Route exact path="/">
+                <Route path="/home">
                     <HomePage />
                 </Route>
                 <Route path="/profile">
@@ -28,6 +29,9 @@ export const App = () => {
                 </Route>
                 <Route exact path="/password/restore">
                     <RestorePasswordPage />
+                </Route>
+                <Route path="*">
+                    <NotFoundPage />
                 </Route>
             </Switch>
         </Router>

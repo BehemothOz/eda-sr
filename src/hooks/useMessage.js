@@ -13,7 +13,7 @@ export const useMessage = () => {
                 <Message type={type} title={title} content={message} onClose={() => closeSnackbar(key)} />
             ),
         });
-    }, []);
+    }, [enqueueSnackbar, closeSnackbar]);
 
     return useMemo(
         () => ({
@@ -21,6 +21,6 @@ export const useMessage = () => {
             error: (msg, options = {}) => toast(msg, { type: 'error', ...options }),
             onClose: closeSnackbar,
         }),
-        []
+        [toast, closeSnackbar]
     );
 };

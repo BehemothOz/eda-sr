@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Container, Drawer, Button } from '@mui/material';
+import { Container, Drawer, Button, Box } from '@mui/material';
 import { Layout } from 'components/layout/Layout';
 import { SearchInput } from 'components/inputs/SearchInput';
 import { useModalForm } from 'hooks/useModalForm';
@@ -15,15 +15,15 @@ import { Tasks } from './components/Tasks';
 */
 
 export const HomePage = () => {
-    const { data, status, run: request } = useResource(api.getTasks, { initialData: [] });
-    // console.log('STATUS tasks', status, data);
+    const { data, status, run: getTasks } = useResource(api.getTasks, { initialData: [] });
+    console.log('STATUS tasks', status);
 
     const modalForm = useModalForm();
     const { state: formState } = modalForm;
 
     useEffect(() => {
-        request();
-    }, [request]);
+        getTasks();
+    }, [getTasks]);
 
     return (
         <Layout>
@@ -37,14 +37,17 @@ export const HomePage = () => {
             <TaskFilter />
 
             <Container maxWidth="lg" style={{ paddingTop: 16, paddingBottom: 16 }}>
-                <Tasks data={data} onOpen={modalForm.onOpenEdit} />
+                {status === 'resolved' && data.length !== 0 && <Tasks data={data} onOpen={modalForm.onOpenEdit} />}
+                {status === 'resolved' && data.length === 0 && (
+                    <Box sx={{ p: 2, textAlign: 'center' }}>Create first task</Box>
+                )}
             </Container>
 
-            <Drawer open={formState.visible} onClose={modalForm.onClose}>
+            <Drawer open={formState.visible} ModalProps={{ closeAfterTransition: true }} onClose={modalForm.onClose}>
                 <TaskForm
                     mode={formState.mode}
                     data={formState.payload}
-                    callAfterSuccessSubmit={request}
+                    callAfterSuccessSubmit={getTasks}
                     onClose={modalForm.onClose}
                 />
             </Drawer>

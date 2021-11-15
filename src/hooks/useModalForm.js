@@ -29,7 +29,10 @@ export const useModalForm = () => {
     };
 
     const onClose = useCallback(() => {
-        setState(defaultState);
+        setState(previous => ({
+            ...previous,
+            visible: false,
+        }));
     }, []);
 
     return {

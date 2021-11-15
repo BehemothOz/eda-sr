@@ -24,14 +24,14 @@ export const LoginPage = () => {
             const userID = await api.auth(values);
             setUserID(userID);
 
-            history.push('/profile');
+            history.push('/home');
         } catch (error) {
             msg.error(error.message);
         }
     };
 
     const onAnonymousSubmit = () => {
-        history.push('/profile');
+        history.push('/home');
     };
 
     return (
@@ -45,7 +45,7 @@ export const LoginPage = () => {
                         <Controller
                             name="login"
                             control={control}
-                            defaultValue="some@sm.bg"
+                            defaultValue=""
                             render={({ field }) => (
                                 <TextField
                                     label="Login"
@@ -66,7 +66,7 @@ export const LoginPage = () => {
                         <Controller
                             name="password"
                             control={control}
-                            defaultValue="aa"
+                            defaultValue=""
                             render={({ field }) => (
                                 <TextField
                                     type="password"

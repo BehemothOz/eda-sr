@@ -3,8 +3,8 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { TextField, Paper, Button, Stack, Typography, Box } from '@mui/material';
 
 import { CenterScreen } from 'components/layout/CenterScreen';
-import { questionList } from 'components/inputs/QuestionSelect';
 import { useMessage } from 'hooks/useMessage';
+import { getLabelForQuestionList } from 'libs/getLabelByValue';
 import { api } from 'api';
 
 export const SecretPasswordForm = props => {
@@ -14,7 +14,11 @@ export const SecretPasswordForm = props => {
     const history = useHistory();
     const msg = useMessage();
 
-    const { control, handleSubmit } = useForm();
+    const {
+        control,
+        formState: { errors },
+        handleSubmit,
+    } = useForm();
 
     const onSubmit = async value => {
         console.log('form data after submit: ', value);
@@ -29,8 +33,6 @@ export const SecretPasswordForm = props => {
         }
     };
 
-    const question = questionList.reduce((acc, it) => (it.value === secretQuestion ? it.label : acc), '');
-
     return (
         <CenterScreen>
             <Paper sx={{ width: '100%', p: 2 }}>
@@ -40,13 +42,22 @@ export const SecretPasswordForm = props => {
                 <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
                     <Stack spacing={2}>
                         <Box>
-                            Question: <i>{question}</i>?
+                            Question: <i>{getLabelForQuestionList(secretQuestion)}</i>?
                         </Box>
                         <Controller
                             name="secretAnswer"
                             control={control}
                             defaultValue=""
-                            render={({ field }) => <TextField label="Answer" fullWidth {...field} />}
+                            render={({ field }) => (
+                                <TextField
+                                    label="Answer"
+                                    fullWidth
+                                    required
+                                    error={Boolean(errors[field.name])}
+                                    {...field}
+                                />
+                            )}
+                            rules={{ required: true }}
                         />
                         <Stack spacing={1} direction="row">
                             <Button variant="contained" color="primary" type="submit">

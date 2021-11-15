@@ -1,19 +1,5 @@
 import { generateID } from '../adapters/generateID';
-
-const initialUser = [
-    [
-        '000-S',
-        {
-            id: '000-S',
-            login: 'some@sm.bg',
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            secretQuestion: 1,
-            secretAnswer: '2',
-        },
-    ],
-];
+import { initialUser } from './__mock';
 
 class Users {
     constructor() {
@@ -29,11 +15,13 @@ class Users {
     }
 
     checkByLogin({ login }) {
-        const [userID] = this._find(([_, user]) => user.login === login);
+        const user = this._find(([_, user]) => user.login === login);
 
-        if (!userID) {
+        if (!user) {
             throw new Error('Invalid login or password');
         }
+
+        const [userID] = user;
 
         this._logs('check_by_login', userID);
         return userID;
