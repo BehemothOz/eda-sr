@@ -15,7 +15,7 @@ export const RestorePasswordPage = () => {
 
     const onSubmit = value => {
         console.log('form data after submit: ', value);
-        history.push('/login');
+        history.push('/');
     };
 
     return (
@@ -49,7 +49,7 @@ export const RestorePasswordPage = () => {
                             <Button variant="contained" color="primary" type="submit">
                                 Send
                             </Button>
-                            <Button color="primary" to="/login" component={RouterLink} style={{ marginLeft: 'auto' }}>
+                            <Button color="primary" to="/" component={RouterLink} style={{ marginLeft: 'auto' }}>
                                 login
                             </Button>
                         </Stack>
