@@ -21,7 +21,7 @@ export const RegisterPage = () => {
 
         try {
             const result = await api.register(data);
-            result && history.push('/login');
+            result && history.push('/');
         } catch (error) {
             console.error(error);
         }
@@ -108,7 +108,7 @@ export const RegisterPage = () => {
                             <Button variant="contained" color="primary" type="submit">
                                 Register
                             </Button>
-                            <Button color="primary" to="/login" component={RouterLink} style={{ marginLeft: 'auto' }}>
+                            <Button color="primary" to="/" component={RouterLink} style={{ marginLeft: 'auto' }}>
                                 Back
                             </Button>
                         </Stack>

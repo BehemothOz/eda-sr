@@ -12,7 +12,7 @@ const UserMenu = props => {
 
     const logoutClick = () => {
         logout();
-        history.push('/login');
+        history.push('/');
     };
 
     return (
