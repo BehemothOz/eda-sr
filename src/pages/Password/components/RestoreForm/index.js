@@ -62,7 +62,7 @@ export const RestorePasswordForm = props => {
                             <Button variant="contained" color="primary" type="submit">
                                 Send
                             </Button>
-                            <Button color="primary" to="/login" component={RouterLink} style={{ marginLeft: 'auto' }}>
+                            <Button color="primary" to="/" component={RouterLink} style={{ marginLeft: 'auto' }}>
                                 Back
                             </Button>
                         </Stack>

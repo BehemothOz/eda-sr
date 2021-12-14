@@ -63,7 +63,7 @@ export const SecretPasswordForm = props => {
                             <Button variant="contained" color="primary" type="submit">
                                 Send
                             </Button>
-                            <Button color="secondary" to="/login" component={RouterLink} style={{ marginLeft: 'auto' }}>
+                            <Button color="secondary" to="/" component={RouterLink} style={{ marginLeft: 'auto' }}>
                                 Login
                             </Button>
                             <Button color="primary" onClick={onBack}>

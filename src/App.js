@@ -12,13 +12,7 @@ export const App = () => {
     return (
         <Router>
             <Switch>
-                <Route path="/home">
-                    <HomePage />
-                </Route>
-                <Route path="/profile">
-                    <ProfilePage />
-                </Route>
-                <Route path="/login">
+                <Route exact path="/">
                     <LoginPage />
                 </Route>
                 <Route exact path="/register">
@@ -29,6 +23,12 @@ export const App = () => {
                 </Route>
                 <Route exact path="/password/restore">
                     <RestorePasswordPage />
+                </Route>
+                <Route path="/home">
+                    <HomePage />
+                </Route>
+                <Route path="/profile">
+                    <ProfilePage />
                 </Route>
                 <Route path="*">
                     <NotFoundPage />

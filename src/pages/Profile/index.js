@@ -7,7 +7,7 @@ import { useAuth } from 'providers/AuthProvider';
 import { ProfileForm } from './components/ProfileForm';
 
 const RedirectButton = props => {
-    const { to = '/login' } = props;
+    const { to = '/' } = props;
 
     return (
         <Button color="primary" variant="outlined" to={to} component={RouterLink}>
@@ -27,7 +27,7 @@ export const ProfilePage = () => {
                 ) : (
                     <Box sx={{ p: 2, textAlign: 'center' }}>
                         <Typography gutterBottom>Oops! I don't know you.</Typography>
-                        <RedirectButton to={'/login'} />
+                        <RedirectButton to={'/'} />
                     </Box>
                 )}
             </Container>
