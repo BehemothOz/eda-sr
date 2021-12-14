@@ -1,16 +1,29 @@
-import { useRef } from 'react';
+import { useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 
-export function SearchInput() {
-    const inputRef = useRef();
+import { useDebounce } from 'hooks/useDebounce';
 
-    const onSearch = async event => {
-        event.preventDefault();
-        console.log('this is value from input-search:', inputRef.current.value);
-    };
+const someAsyncFunction = params => {
+    console.log('i am called with', params)
+}
+
+export function SearchInput() {
+    const onSearch = event => event.preventDefault();
+
+    const handleChange = event => {
+        someAsyncFunction(event.target.value)
+    }
+
+    const debounceChange = useDebounce(handleChange, 500);
+
+    useEffect(() => {
+        return () => {
+            debounceChange.clear();
+        }
+    }, [debounceChange])
 
     return (
         <Paper
@@ -19,10 +32,10 @@ export function SearchInput() {
             onSubmit={onSearch}
         >
             <InputBase
-                inputRef={inputRef}
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Search.."
                 inputProps={{ 'aria-label': 'search tasks' }}
+                onChange={debounceChange}
             />
             <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
                 <SearchIcon />
