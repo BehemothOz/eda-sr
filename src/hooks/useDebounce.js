@@ -14,6 +14,7 @@ import { useRef, useCallback } from 'react';
 
 export const useDebounce = (cb, ms) => {
     const timerID = useRef();
+    const cbRef = useRef(cb);
 
     const clear = useCallback(() => {
         if (timerID.current) clearTimeout(timerID.current);
@@ -23,9 +24,9 @@ export const useDebounce = (cb, ms) => {
         clear();
 
         timerID.current = setTimeout(() => {
-            cb(...args);
+            cbRef.current(...args);
         }, ms);
-    }, []);
+    }, [clear, ms]);
 
     func.clear = clear;
 
