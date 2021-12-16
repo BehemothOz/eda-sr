@@ -1,26 +1,20 @@
+import { delayWithRequest, delayWithTimeoutRequest } from './request';
+
 import { sessionService } from './services/session';
 import { usersService } from './services/users';
 import { tasksService } from './services/tasks';
 
-/*
-    TODO:
-        - create error object
-*/
 
-const delayWithRequest = (time, syncRequest) => {
-    const promise = new Promise((resolve, reject) => {
-        setTimeout(() => {
-            try {
-                const response = syncRequest();
-                resolve(response);
-            } catch (error) {
-                reject(error);
-            }
-        }, time);
-    });
 
-    return promise;
-};
+export const testRequest = async () => {
+    return await delayWithTimeoutRequest(4000, () => {
+        return {
+            a: 1000,
+            b: 2000
+        }
+    })
+}
+
 
 const auth = async data => {
     return await delayWithRequest(0, () => usersService.checkByLogin(data)).then(userID =>
