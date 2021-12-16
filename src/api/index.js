@@ -7,7 +7,7 @@ import { tasksService } from './services/tasks';
 
 
 export const testRequest = async () => {
-    return await delayWithTimeoutRequest(4000, () => {
+    return await delayWithTimeoutRequest(1000, () => {
         return {
             a: 1000,
             b: 2000

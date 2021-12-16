@@ -9,7 +9,7 @@ import { TimeoutRequestError } from './errors';
         - create more error object
 */
 
-const TIMEOUT_REQUEST = 3000;
+const TIMEOUT_REQUEST = 2000;
 
 export const delayWithRequest = (time, syncRequest) => {
     const promise = new Promise((resolve, reject) => {
@@ -26,6 +26,9 @@ export const delayWithRequest = (time, syncRequest) => {
     return promise;
 };
 
+/*
+    Emulation server timeout
+*/
 const timeoutRequest = delay => {
     let timerID;
 
@@ -47,7 +50,7 @@ const delayWithTimeoutRequestCarry =
         const request = delayWithRequest(...args);
         const wait = timeoutRequest(ms);
 
-        const result = await Promise.race([request, wait.promise]).finally(() => console.log('finally') || wait.clear());
+        const result = await Promise.race([request, wait.promise]).finally(() => console.log('clear timeout') || wait.clear());
 
         return result;
     };
