@@ -4,18 +4,6 @@ import { sessionService } from './services/session';
 import { usersService } from './services/users';
 import { tasksService } from './services/tasks';
 
-
-
-export const testRequest = async () => {
-    return await delayWithTimeoutRequest(10000, () => {
-        return {
-            a: 1000,
-            b: 2000
-        }
-    })
-}
-
-
 const auth = async data => {
     return await delayWithRequest(0, () => usersService.checkByLogin(data)).then(userID =>
         sessionService.setUserID(userID)
@@ -47,7 +35,7 @@ const updateUser = async (userID, data) => {
 };
 
 const getTasks = async () => {
-    return await delayWithRequest(0, () => tasksService.getAll());
+    return await delayWithTimeoutRequest(0, () => tasksService.getAll());
 };
 
 const createTask = async data => {

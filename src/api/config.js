@@ -1,0 +1,1 @@
+export const TIMEOUT_REQUEST = 2000;

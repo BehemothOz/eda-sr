@@ -1,16 +1,14 @@
 import { TimeoutRequestError } from './errors';
-
-/*
-    Server emulation work
-*/
+import { TIMEOUT_REQUEST } from './config';
 
 /*
     TODO:
         - create more error object
 */
 
-const TIMEOUT_REQUEST = 2000;
-
+/*
+    Emulation request WITHOUT timeout
+*/
 export const delayWithRequest = (time, syncRequest) => {
     const promise = new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -18,7 +16,7 @@ export const delayWithRequest = (time, syncRequest) => {
                 const response = syncRequest();
                 resolve(response);
             } catch (error) {
-                console.log('EEROROROROOROROR', error)
+                console.log('EEROROROROOROROR', error);
                 reject(error);
             }
         }, time);
@@ -45,6 +43,9 @@ const timeoutRequest = delay => {
     };
 };
 
+/*
+    Emulation request WITH timeout
+*/
 const delayWithTimeoutRequestCarry =
     ms =>
     async (...args) => {
