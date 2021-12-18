@@ -6,7 +6,6 @@ import { PasswordPage } from './pages/Password';
 import { RestorePasswordPage } from './pages/Restore';
 import { HomePage } from './pages/Home';
 import { ProfilePage } from './pages/Profile';
-import { TestPage } from './pages/Test';
 import { NotFoundPage } from './pages/404';
 
 export const App = () => {
@@ -30,9 +29,6 @@ export const App = () => {
                 </Route>
                 <Route path="/profile">
                     <ProfilePage />
-                </Route>
-                <Route path="/test">
-                    <TestPage />
                 </Route>
                 <Route path="*">
                     <NotFoundPage />

@@ -17,6 +17,7 @@ export const repeatable = (asyncFunc, options = {}) => {
         try {
             return await asyncFunc(...args);
         } catch (error) {
+            console.log('THIS IS ERROR IN RETRY FUNCTION', error)
             if (isRunning && max !== 0 && count < max && statusCodes.includes(error.status)) {
                 console.log('retry work with status', error.status);
                 onError && onError({ _retryCount: count, _retryMaxCount: max, error });
