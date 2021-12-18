@@ -18,9 +18,8 @@ export const repeatable = (asyncFunc, options = {}) => {
             return await asyncFunc(...args);
         } catch (error) {
             if (isRunning && max !== 0 && count < max && statusCodes.includes(error.status)) {
-                // if (max !== 0 && count < max) {
-                console.log(error.status);
-                onError && onError({ _retryCount: count, error });
+                console.log('retry work with status', error.status);
+                onError && onError({ _retryCount: count, _retryMaxCount: max, error });
 
                 await delay(duration);
                 count += 1;

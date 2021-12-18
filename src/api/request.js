@@ -18,6 +18,7 @@ export const delayWithRequest = (time, syncRequest) => {
                 const response = syncRequest();
                 resolve(response);
             } catch (error) {
+                console.log('EEROROROROOROROR', error)
                 reject(error);
             }
         }, time);
@@ -50,7 +51,7 @@ const delayWithTimeoutRequestCarry =
         const request = delayWithRequest(...args);
         const wait = timeoutRequest(ms);
 
-        const result = await Promise.race([request, wait.promise]).finally(() => console.log('clear timeout') || wait.clear());
+        const result = await Promise.race([request, wait.promise]).finally(() => wait.clear());
 
         return result;
     };
