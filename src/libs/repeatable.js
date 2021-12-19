@@ -27,6 +27,7 @@ export const repeatable = (asyncFunc, options = {}) => {
                 return retry(args);
             }
 
+            count = 0;
             throw error;
         }
     };

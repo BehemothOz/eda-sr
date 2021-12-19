@@ -34,8 +34,8 @@ const updateUser = async (userID, data) => {
     return await delayWithRequest(0, () => usersService.update(userID, data));
 };
 
-const getTasks = async () => {
-    return await delayWithTimeoutRequest(0, () => tasksService.getAll());
+const getTasks = async params => {
+    return await delayWithTimeoutRequest(1000, () => tasksService.getAll(params));
 };
 
 const createTask = async data => {

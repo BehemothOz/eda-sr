@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Drawer, Button, Box, CircularProgress, Alert } from '@mui/material';
+import React from 'react';
+import { Container, Drawer, Box, CircularProgress, Alert } from '@mui/material';
 import { Layout } from 'components/layout/Layout';
-import { SearchInput } from 'components/inputs/SearchInput';
 import { useModalForm } from 'hooks/useModalForm';
 import { useResource } from 'hooks/useResource';
 import { api } from 'api';
 
-import { TaskForm } from './components/TaskForm';
-import { TaskFilter } from './components/TaskFilter';
+import { LoadingOverlay } from './components/LoadingOverlay';
+import { Heading } from './components/Heading';
+import { TaskForm } from './components/Form';
 import { Tasks } from './components/Tasks';
 
 /*
@@ -22,42 +22,13 @@ const SpinLayout = () => {
     );
 };
 
-const ErrorLayout = () => {
-    return (
-        <Box>
-            <Alert severity="error" variant="outlined">
-                This is an error alert — check it out!
-            </Alert>
-        </Box>
-    );
-};
-
-const updateParams = newParams => previousParams => ({ ...previousParams, ...newParams });
-
-const Heading = props => {
-    const { onCreate, getTasks } = props;
-
-    const [params, setParams] = useState({});
-
-    useEffect(() => {
-        getTasks(params);
-    }, [getTasks, params]);
-
-    const onSetParams = value => {
-        setParams(updateParams(value));
-    };
+const ErrorLayout = props => {
+    const { msg = 'Something went wrong' } = props;
 
     return (
-        <>
-            <div style={{ display: 'flex', justifyContent: 'end', padding: 16, backgroundColor: '#e8e8e8' }}>
-                <Button variant="contained" style={{ marginRight: 16 }} onClick={onCreate}>
-                    Create
-                </Button>
-                <SearchInput onSetParams={onSetParams} />
-            </div>
-
-            <TaskFilter />
-        </>
+        <Alert severity="error" variant="outlined">
+            {msg}
+        </Alert>
     );
 };
 
@@ -72,14 +43,14 @@ export const HomePage = () => {
         <Layout>
             <Heading onCreate={modalForm.onOpenCreate} getTasks={getTasks} />
 
-            <Container maxWidth="lg" style={{ paddingTop: 16, paddingBottom: 16 }}>
-                {status === 'pending' && <SpinLayout />}
-                {status === 'rejected' && <ErrorLayout />}
-                {status === 'resolved' && data.length !== 0 && <Tasks data={data} onOpen={modalForm.onOpenEdit} />}
-                {/* {status === 'resolved' && data.length === 0 && (
-                    <Box sx={{ p: 2, textAlign: 'center' }}>Create first task</Box>
-                )} */}
-            </Container>
+            <LoadingOverlay visible={status === 'pending' && data.length !== 0}>
+                <Container maxWidth="lg" style={{ paddingTop: 16, paddingBottom: 16 }}>
+                    {status === 'pending' && data.length === 0 && <SpinLayout />}
+                    {status === 'rejected' && <ErrorLayout />}
+
+                    <Tasks data={data} onOpen={modalForm.onOpenEdit} />
+                </Container>
+            </LoadingOverlay>
 
             <Drawer open={formState.visible} ModalProps={{ closeAfterTransition: true }} onClose={modalForm.onClose}>
                 <TaskForm

@@ -23,4 +23,22 @@ export const initialTasks = [
         actualStartTime: null,
         actualEndTime: null,
     },
+    {
+        id: 2,
+        title: 'Cook pasta with chicken',
+        type: '',
+        plannedStartTime: new Date(2021, 9, 1),
+        plannedEndTime: new Date(2021, 9, 25),
+        actualStartTime: null,
+        actualEndTime: null,
+    },
+    {
+        id: 3,
+        title: 'Cook pasta with chicken',
+        type: '',
+        plannedStartTime: new Date(2021, 9, 1),
+        plannedEndTime: new Date(2021, 9, 25),
+        actualStartTime: null,
+        actualEndTime: null,
+    },
 ];
