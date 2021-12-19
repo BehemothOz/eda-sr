@@ -32,10 +32,20 @@ const ErrorLayout = () => {
     );
 };
 
-const Heading = props => {
-    const { onCreate } = props;
+const updateParams = newParams => previousParams => ({ ...previousParams, ...newParams });
 
-    // const [params, setParams] = useState({});
+const Heading = props => {
+    const { onCreate, getTasks } = props;
+
+    const [params, setParams] = useState({});
+
+    useEffect(() => {
+        getTasks(params);
+    }, [getTasks, params]);
+
+    const onSetParams = value => {
+        setParams(updateParams(value));
+    };
 
     return (
         <>
@@ -43,7 +53,7 @@ const Heading = props => {
                 <Button variant="contained" style={{ marginRight: 16 }} onClick={onCreate}>
                     Create
                 </Button>
-                <SearchInput />
+                <SearchInput onSetParams={onSetParams} />
             </div>
 
             <TaskFilter />
@@ -58,11 +68,9 @@ export const HomePage = () => {
     const modalForm = useModalForm();
     const { state: formState } = modalForm;
 
-    useEffect(() => getTasks(), [getTasks]);
-
     return (
         <Layout>
-            <Heading onCreate={modalForm.onOpenCreate} />
+            <Heading onCreate={modalForm.onOpenCreate} getTasks={getTasks} />
 
             <Container maxWidth="lg" style={{ paddingTop: 16, paddingBottom: 16 }}>
                 {status === 'pending' && <SpinLayout />}
