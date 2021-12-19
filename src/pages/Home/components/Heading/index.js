@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
 import { SearchInput } from 'components/inputs/SearchInput';
 import { TaskFilter } from '../Filter';
+import { useCallback } from 'react';
 
 const updateParams = newParams => previousParams => ({ ...previousParams, ...newParams });
 
@@ -14,9 +15,14 @@ export const Heading = props => {
         getTasks(params);
     }, [getTasks, params]);
 
-    const onSetParams = values => {
+    useEffect(() => {
+        return () => getTasks.cancel();
+    }, [])
+
+    // Used in child useEffect. Need memo.
+    const onSetParams = useCallback(values => {
         setParams(updateParams(values));
-    };
+    }, []);
 
     return (
         <>

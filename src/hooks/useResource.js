@@ -75,8 +75,11 @@ export const useResource = (asyncFunc, options = {}) => {
         () =>
             repeatable(asyncFunc, {
                 max: LIMIT,
-                onError: () => {
-                    msg.error('Attempt to retry request..');
+                onError: ({ _retryCount }) => {
+                    const msgRetry = _retryCount
+                        ? 'Attempt to retry request..'
+                        : 'Connection is broken. Repeat the request.';
+                    msg.error(msgRetry);
                 },
             }),
         [asyncFunc, msg]
