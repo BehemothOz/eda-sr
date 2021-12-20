@@ -1,4 +1,6 @@
-import { useCallback, useReducer, useRef, useEffect } from 'react';
+import { useCallback, useReducer, useRef, useEffect, useMemo } from 'react';
+import { useMessage } from 'hooks/useMessage';
+import { repeatable } from 'libs/repeatable';
 
 /*
     statuses
@@ -46,8 +48,14 @@ function reducer(state, action) {
         - add reset after request (unmount)
 */
 
+const LIMIT = 3;
+
 export const useResource = (asyncFunc, options = {}) => {
     const { initialData = null, onSuccess, onError } = options;
+
+    const msg = useMessage();
+
+    const cancelRequest = useRef(false); // fix for "can't perform a React state update on an unmounted component"
 
     const refOnSuccess = useRef(onSuccess);
     const refOnError = useRef(onError);
@@ -63,23 +71,46 @@ export const useResource = (asyncFunc, options = {}) => {
         error: null,
     });
 
+    const repeatableRun = useMemo(
+        () =>
+            repeatable(asyncFunc, {
+                max: LIMIT,
+                onError: ({ _retryCount }) => {
+                    const msgRetry = _retryCount
+                        ? 'Attempt to retry request..'
+                        : 'Connection is broken. Repeat the request.';
+                    msg.error(msgRetry);
+                },
+            }),
+        [asyncFunc, msg]
+    );
+
     const run = useCallback(
         async (...args) => {
             try {
                 dispatch({ type: 'started' });
-                const response = await asyncFunc(...args);
+                const response = await repeatableRun(...args);
+
+                if (cancelRequest.current) return;
 
                 dispatch({ type: 'success', data: response });
                 refOnSuccess.current && refOnSuccess.current(response);
             } catch (error) {
                 console.error('Inside run error', error);
 
+                if (cancelRequest.current) return;
+
                 dispatch({ type: 'error', error: new Error('Some error') });
                 refOnError.current && refOnError.current(error);
             }
         },
-        [asyncFunc]
+        [repeatableRun]
     );
+
+    run.cancel = () => {
+        cancelRequest.current = true;
+        repeatableRun.clear();
+    };
 
     return {
         ...state,

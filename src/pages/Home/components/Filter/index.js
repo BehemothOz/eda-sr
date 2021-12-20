@@ -6,25 +6,22 @@ import { TypeSelect } from 'components/inputs/TypeSelect';
 import { UserSelect } from 'components/inputs/UserSelect';
 import { DatePicker } from 'shared/DatePicker';
 
-export const TaskFilter = () => {
+export const TaskFilter = props => {
+    const { onSetParams } = props;
     const { control, watch, handleSubmit } = useForm();
-
-    const onSubmit = async data => {
-        console.log('onSubmit TaskFilter', data);
-    };
 
     useEffect(() => {
         const subscription = watch(() => {
-            handleSubmit(onSubmit)();
+            handleSubmit(onSetParams)();
         });
 
         return () => subscription.unsubscribe();
-    }, [watch, handleSubmit]);
+    }, [watch, handleSubmit, onSetParams]);
 
     return (
         <div style={{ padding: '16px 0', backgroundColor: '#fff' }}>
             <Container maxWidth="lg">
-                <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+                <form noValidate autoComplete="off">
                     <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
                         <Controller
                             name="user"

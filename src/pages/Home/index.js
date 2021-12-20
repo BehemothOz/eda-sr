@@ -1,18 +1,36 @@
-import React, { useEffect } from 'react';
-import { Container, Drawer, Button, Box } from '@mui/material';
+import React from 'react';
+import { Container, Drawer, Box, CircularProgress, Alert } from '@mui/material';
 import { Layout } from 'components/layout/Layout';
-import { SearchInput } from 'components/inputs/SearchInput';
 import { useModalForm } from 'hooks/useModalForm';
 import { useResource } from 'hooks/useResource';
 import { api } from 'api';
 
-import { TaskForm } from './components/TaskForm';
-import { TaskFilter } from './components/TaskFilter';
+import { LoadingOverlay } from './components/LoadingOverlay';
+import { Heading } from './components/Heading';
+import { TaskForm } from './components/Form';
 import { Tasks } from './components/Tasks';
 
 /*
     Fields for filter: пользователь, тип задачи, название, плановое время, фактическое время.
 */
+
+const SpinLayout = () => {
+    return (
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <CircularProgress />
+        </Box>
+    );
+};
+
+const ErrorLayout = props => {
+    const { msg = 'Something went wrong' } = props;
+
+    return (
+        <Alert severity="error" variant="outlined">
+            {msg}
+        </Alert>
+    );
+};
 
 export const HomePage = () => {
     const { data, status, run: getTasks } = useResource(api.getTasks, { initialData: [] });
@@ -21,27 +39,18 @@ export const HomePage = () => {
     const modalForm = useModalForm();
     const { state: formState } = modalForm;
 
-    useEffect(() => {
-        getTasks();
-    }, [getTasks]);
-
     return (
         <Layout>
-            <div style={{ display: 'flex', justifyContent: 'end', padding: 16, backgroundColor: '#e8e8e8' }}>
-                <Button variant="contained" style={{ marginRight: 16 }} onClick={modalForm.onOpenCreate}>
-                    Create
-                </Button>
-                <SearchInput />
-            </div>
+            <Heading onCreate={modalForm.onOpenCreate} getTasks={getTasks} />
 
-            <TaskFilter />
+            <LoadingOverlay visible={status === 'pending' && data.length !== 0}>
+                <Container maxWidth="lg" style={{ paddingTop: 16, paddingBottom: 16 }}>
+                    {status === 'pending' && data.length === 0 && <SpinLayout />}
+                    {status === 'rejected' && <ErrorLayout />}
 
-            <Container maxWidth="lg" style={{ paddingTop: 16, paddingBottom: 16 }}>
-                {status === 'resolved' && data.length !== 0 && <Tasks data={data} onOpen={modalForm.onOpenEdit} />}
-                {status === 'resolved' && data.length === 0 && (
-                    <Box sx={{ p: 2, textAlign: 'center' }}>Create first task</Box>
-                )}
-            </Container>
+                    <Tasks data={data} onOpen={modalForm.onOpenEdit} />
+                </Container>
+            </LoadingOverlay>
 
             <Drawer open={formState.visible} ModalProps={{ closeAfterTransition: true }} onClose={modalForm.onClose}>
                 <TaskForm
