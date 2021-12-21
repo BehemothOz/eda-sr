@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Drawer, Box, CircularProgress, Alert } from '@mui/material';
 import { Layout } from 'components/layout/Layout';
 import { useModalForm } from 'hooks/useModalForm';
-import { useResource } from 'hooks/useResource';
+import { useResource } from 'hooks/request/useResource';
 import { api } from 'api';
 
 import { LoadingOverlay } from './components/LoadingOverlay';

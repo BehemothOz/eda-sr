@@ -5,13 +5,13 @@ import { usersService } from './services/users';
 import { tasksService } from './services/tasks';
 
 const auth = async data => {
-    return await delayWithRequest(0, () => usersService.checkByLogin(data)).then(userID =>
+    return await delayWithTimeoutRequest(0, () => usersService.checkByLogin(data)).then(userID =>
         sessionService.setUserID(userID)
     );
 };
 
 const register = async data => {
-    return await delayWithRequest(0, () => usersService.register(data));
+    return await delayWithTimeoutRequest(0, () => usersService.register(data));
 };
 
 const checkUser = async data => {

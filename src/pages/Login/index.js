@@ -4,6 +4,7 @@ import { TextField, Paper, Button, Stack, Typography } from '@mui/material';
 import { CenterScreen } from 'components/layout/CenterScreen';
 import { useMessage } from 'hooks/useMessage';
 import { useAuthActions } from 'providers/AuthProvider';
+import { useSimpleResource } from 'hooks/request/useSimpleResource';
 
 import { api } from '../../api';
 
@@ -19,16 +20,15 @@ export const LoginPage = () => {
         handleSubmit,
     } = useForm();
 
-    const onSubmit = async values => {
-        try {
-            const userID = await api.auth(values);
+    const authRequest = useSimpleResource(api.auth, {
+        onSuccess: userID => {
             setUserID(userID);
-
             history.push('/home');
-        } catch (error) {
-            msg.error(error.message);
-        }
-    };
+        },
+        onError: error => msg.error(error.message),
+    });
+
+    const onSubmit = values => authRequest(values);
 
     const onAnonymousSubmit = () => {
         history.push('/home');

@@ -6,6 +6,7 @@ import { CenterScreen } from 'components/layout/CenterScreen';
 import { QuestionSelect } from 'components/inputs/QuestionSelect';
 
 import { api } from 'api';
+import { useSimpleResource } from 'hooks/request/useSimpleResource';
 
 export const RegisterPage = () => {
     const history = useHistory();
@@ -16,16 +17,16 @@ export const RegisterPage = () => {
         handleSubmit,
     } = useForm();
 
-    const onSubmit = async data => {
-        console.log('form data after submit: ', data);
-
-        try {
-            const result = await api.register(data);
+    const registerRequest = useSimpleResource(api.register, {
+        onSuccess: result => {
             result && history.push('/');
-        } catch (error) {
+        },
+        onError: error => {
             console.error(error);
-        }
-    };
+        },
+    });
+
+    const onSubmit = data => registerRequest(data);
 
     return (
         <CenterScreen>
