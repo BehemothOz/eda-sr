@@ -1,6 +1,5 @@
-import { useCallback, useReducer, useRef, useEffect, useMemo } from 'react';
-import { useMessage } from 'hooks/useMessage';
-import { repeatable } from 'libs/repeatable';
+import { useCallback, useReducer, useRef } from 'react';
+import { useRepeatableAsync } from './useRepeatableAsync';
 
 /*
     statuses
@@ -48,22 +47,16 @@ function reducer(state, action) {
         - add reset after request (unmount)
 */
 
-const LIMIT = 3;
-
+/*
+    Return request function WITH state
+*/
 export const useResource = (asyncFunc, options = {}) => {
     const { initialData = null, onSuccess, onError } = options;
-
-    const msg = useMessage();
 
     const cancelRequest = useRef(false); // fix for "can't perform a React state update on an unmounted component"
 
     const refOnSuccess = useRef(onSuccess);
     const refOnError = useRef(onError);
-
-    useEffect(() => {
-        refOnSuccess.current = onSuccess;
-        refOnError.current = onError;
-    });
 
     const [state, dispatch] = useReducer(reducer, {
         status: 'idle',
@@ -71,19 +64,7 @@ export const useResource = (asyncFunc, options = {}) => {
         error: null,
     });
 
-    const repeatableRun = useMemo(
-        () =>
-            repeatable(asyncFunc, {
-                max: LIMIT,
-                onError: ({ _retryCount }) => {
-                    const msgRetry = _retryCount
-                        ? 'Attempt to retry request..'
-                        : 'Connection is broken. Repeat the request.';
-                    msg.error(msgRetry);
-                },
-            }),
-        [asyncFunc, msg]
-    );
+    const repeatableRun = useRepeatableAsync(asyncFunc);
 
     const run = useCallback(
         async (...args) => {

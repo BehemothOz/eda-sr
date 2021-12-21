@@ -6,7 +6,7 @@ import { TypeSelect } from 'components/inputs/TypeSelect';
 import { DatePicker } from 'shared/DatePicker';
 
 import { MODE_EDIT } from 'hooks/useModalForm';
-import { useResource } from 'hooks/useResource';
+import { useResource } from 'hooks/request/useResource';
 import { useMessage } from 'hooks/useMessage';
 import { api } from 'api';
 

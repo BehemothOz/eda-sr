@@ -15,9 +15,9 @@ export const Heading = props => {
         getTasks(params);
     }, [getTasks, params]);
 
-    useEffect(() => {
-        return () => getTasks.cancel();
-    }, [])
+    // useEffect(() => {
+    //     return () => getTasks.cancel();
+    // }, [getTasks])
 
     // Used in child useEffect. Need memo.
     const onSetParams = useCallback(values => {

@@ -16,7 +16,7 @@ export const delayWithRequest = (time, syncRequest) => {
                 const response = syncRequest();
                 resolve(response);
             } catch (error) {
-                console.log('EEROROROROOROROR', error);
+                // console.log('MAIN SERVER ERROR --->', error);
                 reject(error);
             }
         }, time);
