@@ -1,15 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 const getPathFromPublic = path => `${process.env.PUBLIC_URL}/${path}`;
 
+const createAction = (type, value = '') => ({ type, value });
+const serialize = action => {
+    try {
+        return JSON.stringify(action);
+    } catch (error) {
+        throw Error('Oops');
+    }
+};
+
 export const TestPage = () => {
-    const [count, setCount] = useState(0);
+    const [items, setItems] = useState([]);
     const workerRef = useRef();
 
-    const [s, ss] = useState('');
-
     useEffect(() => {
-        console.log(getPathFromPublic('shared.worker.js'));
         const worker = new SharedWorker(getPathFromPublic('shared.worker.js'));
         workerRef.current = worker;
 
@@ -17,7 +23,7 @@ export const TestPage = () => {
             'message',
             e => {
                 console.log(e.data);
-                ss(e.data);
+                setItems(JSON.parse(e.data));
             },
             false
         );
@@ -30,14 +36,30 @@ export const TestPage = () => {
         };
     }, []);
 
-    const sendToWorker = () => {
-        workerRef.current.port.postMessage(count + 1);
+    useEffect(() => {
+        getData();
+    }, []);
+
+    const getData = useCallback(() => {
+        const action = createAction('GET');
+        workerRef.current.port.postMessage(serialize(action));
+    }, []);
+
+    const addData = () => {
+        const action = createAction('ADD', { info: 'Item', count: Math.random() * 50 });
+        workerRef.current.port.postMessage(serialize(action));
     };
 
     return (
         <div>
-            <button onClick={sendToWorker}>BTN FOR INC</button>
-            <span style={{ margin: '0 16px' }}>Result: {s}</span>
+            <button onClick={addData}>BTN FOR INC</button>
+            <ul>
+                {items.map((it, idx) => (
+                    <li key={idx}>
+                        {it.info}::{it.count}
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 };
