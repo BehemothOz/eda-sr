@@ -70,9 +70,9 @@ self.addEventListener('connect', function (e) {
         const { type, value } = JSON.parse(event.data);
 
         switch (type) {
-            case 'GET': {
+            case 'GET_TASKS': {
                 // port.postMessage(JSON.stringify(state.get()));
-                port.postMessage([]);
+                port.postMessage(JSON.stringify({ type, value: [{ info: 'Some info', count: 100 }] }));
                 break;
             }
             case 'ADD':

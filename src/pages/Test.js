@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { createContext } from 'react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 
@@ -13,53 +13,62 @@ const serialize = action => {
     }
 };
 
-function noop() {}
+// const addData = () => {
+//     const action = createAction('ADD', { info: 'Item', count: Math.random() * 50 });
+//     workerRef.current.port.postMessage(serialize(action));
+// };
 
-class SharedWorkerCustom {
-    constructor() {
-        this.worker = new SharedWorker(getPathFromPublic('shared.worker.js'));
-        this.listeners = {};
+// function noop() {}
 
-        this.defaultListener = noop;
-    }
+function createSharedWorker() {
+    const worker = new SharedWorker(getPathFromPublic('shared.worker.js'));
+    const listeners = {};
 
-    //   if (onError) {worker.onerror = onError;}
+    // this.defaultListener = noop;
 
-    postMessage(args) {
-        this.worker.port.postMessage(serialize(args));
-    }
+    // if (onError) {worker.onerror = onError;}
 
-    terminate() {
-        this.worker.terminate();
-    }
+    return {
+        worker,
+        listeners,
+        postMessage(type, value) {
+            const params = {
+                type,
+                value: value || {}
+            }
+            worker.port.postMessage(serialize(params));
+        },
 
-    addListener(name, listener) {
-        console.log('addListener', name, listener)
-        console.log(this)
-        this.listeners[name] = listener;
-    }
+        // terminate() {
+        //     worker.terminate();
+        // },
 
-    removeListener(name) {
-        delete this.listeners[name];
-    }
+        addListener(name, listener) {
+            console.log('addListener', name, listener)
+            listeners[name] = listener;
+        },
+
+        removeListener(name) {
+            delete listeners[name];
+        },
+    };
 }
 
 const SharedContext = createContext();
 
 const SharedProvider = ({ value, children }) => {
-    console.log('Value for provider', value);
+    console.log('Value for provider - instance worker', value);
 
-    const { worker, addListener, postMessage } = value;
+    const { worker, listeners, addListener, postMessage } = value;
 
     useEffect(() => {
         worker.port.addEventListener(
             'message',
             e => {
-                console.log('onMEssage', e.data);
-                // const { type, payload } = e.data;
+                console.log('onmessage event data: ', e.data);
+                const { type, value } = JSON.parse(e.data);
 
-                // listeners[type](payload);
-                // setItems(JSON.parse(e.data));
+                listeners[type](value);
             },
             false
         );
@@ -76,22 +85,13 @@ const SharedProvider = ({ value, children }) => {
         };
     }, []);
 
-    const send = (...args) => {
-
-        console.log('Proveder', args)
-        postMessage.call(value, ...args);
-    };
-
-    const addL = (...args) => {
-        addListener.apply(value, args);
-    };
-
-    const actions = {
-        send: send,
-        addListener: addL,
-    };
-
-    console.log(actions);
+    const actions = useMemo(
+        () => ({
+            postMessage,
+            addListener,
+        }),
+        []
+    );
 
     return <SharedContext.Provider value={actions}>{children}</SharedContext.Provider>;
 };
@@ -100,59 +100,40 @@ const useShared = () => {
     return useContext(SharedContext);
 };
 
-const useSome = type => {
-    const worker = useShared();
-    console.log(worker);
-    const [state, setState] = useState([]);
+const useSharedResource = (type, options = {}) => {
+    const { initialState = null } = options;
+    const { addListener, postMessage } = useShared();
+
+    const [state, setState] = useState(initialState);
 
     useEffect(() => {
-        worker.addListener(type, data => {
+        addListener(type, data => {
             setState(data);
         });
-
-        return () => {
-            // remove
-        };
+        return () => {};
     }, []);
 
-    const func = (data = {}) => {
-        console.log('111', { type, data });
-        worker.send({ type, value: data });
-    };
+    const run = useCallback((data) => {
+        postMessage(type, data);
+    }, []);
 
-    return {
-        state,
-        run: func,
-    };
+    return [state, run];
 };
 
 const Test = () => {
-    const ss = useSome('GET');
+    const [data, run] = useSharedResource('GET_TASKS', { initialState: [] });
 
-    console.log(ss);
-
-    // const [items, setItems] = useState([]);
-    // const workerRef = useRef();
+    const onClick = () => run();
 
     useEffect(() => {
-        ss.run();
-    }, []);
-
-    // const getData = useCallback(() => {
-    //     const action = createAction('GET');
-    //     workerRef.current.port.postMessage(serialize(action));
-    // }, []);
-
-    // const addData = () => {
-    //     const action = createAction('ADD', { info: 'Item', count: Math.random() * 50 });
-    //     workerRef.current.port.postMessage(serialize(action));
-    // };
+        run();
+    }, [])
 
     return (
         <div>
-            <button onClick={() => {}}>BTN FOR INC</button>
+            <button onClick={onClick}>BTN FOR INC</button>
             <ul>
-                {[].map((it, idx) => (
+                {data.map((it, idx) => (
                     <li key={idx}>
                         {it.info}::{it.count}
                     </li>
@@ -162,7 +143,7 @@ const Test = () => {
     );
 };
 
-const instance = new SharedWorkerCustom(getPathFromPublic('shared.worker.js'));
+const instance = createSharedWorker();
 
 export const TestPage = () => {
     return (
