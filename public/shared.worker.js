@@ -64,12 +64,15 @@ class Tasks {
 self.addEventListener('connect', function (e) {
     const port = e.ports[0];
 
+    self.console.log('test');
+
     port.onmessage = function (event) {
         const { type, value } = JSON.parse(event.data);
 
         switch (type) {
             case 'GET': {
-                port.postMessage(JSON.stringify(state.get()));
+                // port.postMessage(JSON.stringify(state.get()));
+                port.postMessage([]);
                 break;
             }
             case 'ADD':
