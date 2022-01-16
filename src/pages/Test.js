@@ -30,13 +30,14 @@ function createSharedWorker() {
 
     return {
         worker,
-        listeners,
         postMessage(type, value) {
             const params = { type, value: value || {} };
+            console.log('I send to worker: ', params);
             worker.port.postMessage(serialize(params));
         },
-        addListener(name, listener) {
-            listeners[name] = listener;
+        addListener(type, listener) {
+            console.log('I added listener by name', type);
+            listeners[type] = listener;
         },
         removeListener(name) {
             delete listeners[name];
@@ -61,13 +62,25 @@ const SharedProvider = ({ value, children }) => {
                 console.log('I got the data from the worker', event.data);
                 const { type, value } = JSON.parse(event.data); // todo: improve
 
-                notify(type, value)
+                notify(type, value);
+            },
+            false
+        );
+
+        worker.port.addEventListener(
+            'messageerror',
+            error => {
+                console.log(error);
             },
             false
         );
 
         worker.onerror = function (err) {
-            console.dir(err);
+            console.log(err);
+        };
+
+        worker.port.onerror = function (err) {
+            console.log(err);
         };
 
         worker.port.start();
@@ -113,19 +126,22 @@ const useSharedResource = (type, options = {}) => {
 };
 
 const Test = () => {
-    const [data, run] = useSharedResource('GET_TASKS', { initialState: [] });
+    const [tasks, getTasks] = useSharedResource('GET_TASKS', { initialState: [] });
+    const [_, createTask] = useSharedResource('CREATE_TASK');
 
-    const onClick = () => run();
+    const onGetClick = () => getTasks();
+    const onCreateClick = () => createTask({ count: 1000, info: 'love playing with dog tail' });
 
-    useEffect(() => {
-        run();
-    }, []);
+    // useEffect(() => {
+    //     run();
+    // }, []);
 
     return (
         <div>
-            <button onClick={onClick}>BTN FOR INC</button>
+            <button onClick={onGetClick}>BTN FOR GET ALL</button>
+            <button onClick={onCreateClick}>BTN FOR CREATE ONE</button>
             <ul>
-                {data.map((it, idx) => (
+                {tasks.map((it, idx) => (
                     <li key={idx}>
                         {it.info}::{it.count}
                     </li>

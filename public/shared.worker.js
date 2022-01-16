@@ -15,11 +15,11 @@ class Data {
     remove() {}
 }
 
-const state = new Data();
-
 class Tasks {
     constructor() {
-        this.tasks = initialTasks;
+        // this.tasks = initialTasks;
+        this.tasks = [];
+        this.count = 1; // temp
     }
 
     getAll() {
@@ -30,9 +30,10 @@ class Tasks {
     getByID() {}
 
     create(data) {
-        const id = generateID.get();
+        // const id = generateID.get();
+        const id = this.count;
         this.tasks = [...this.tasks, { id, ...data }];
-
+        this.count++;
         return id;
         // throw new Error('Ooops')
     }
@@ -48,35 +49,26 @@ class Tasks {
     }
 }
 
-/*
-    getAll
-    create
-    update
-    delete
+const tasks = new Tasks();
 
-    function send(payload) {
-        const { type, data } = payload;
-        const newData = data;
-        return { type, data: newData }
-    }
+/*
+    chrome://inspect/#workers
+    help: https://stackoverflow.com/questions/2323778/how-to-debug-web-workers
 */
 
 self.addEventListener('connect', function (e) {
     const port = e.ports[0];
-
-    self.console.log('test');
 
     port.onmessage = function (event) {
         const { type, value } = JSON.parse(event.data);
 
         switch (type) {
             case 'GET_TASKS': {
-                // port.postMessage(JSON.stringify(state.get()));
-                port.postMessage(JSON.stringify({ type, value: [{ info: 'Some info', count: 100 }] }));
+                port.postMessage(JSON.stringify({ type, value: tasks.getAll() }));
                 break;
             }
-            case 'ADD':
-                port.postMessage(JSON.stringify(state.add(value)));
+            case 'CREATE_TASK':
+                port.postMessage(JSON.stringify({ type, value: tasks.create(value) }));
                 break;
 
             default:
