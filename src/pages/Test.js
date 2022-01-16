@@ -1,6 +1,4 @@
-import { useContext, useMemo } from 'react';
-import { createContext } from 'react';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useContext, useMemo, useEffect, createContext, useState, useCallback } from 'react';
 
 const getPathFromPublic = path => `${process.env.PUBLIC_URL}/${path}`;
 
@@ -13,43 +11,38 @@ const serialize = action => {
     }
 };
 
-// const addData = () => {
-//     const action = createAction('ADD', { info: 'Item', count: Math.random() * 50 });
-//     workerRef.current.port.postMessage(serialize(action));
-// };
-
 // function noop() {}
+
+/*
+    - initializing the worker (ex, 'init event')
+    - handle errors
+    - add default listener (as catch)
+    - resolve deps
+    - add listener -> remove listener
+*/
 
 function createSharedWorker() {
     const worker = new SharedWorker(getPathFromPublic('shared.worker.js'));
     const listeners = {};
 
-    // this.defaultListener = noop;
-
+    // defaultListener = noop;
     // if (onError) {worker.onerror = onError;}
 
     return {
         worker,
         listeners,
         postMessage(type, value) {
-            const params = {
-                type,
-                value: value || {}
-            }
+            const params = { type, value: value || {} };
             worker.port.postMessage(serialize(params));
         },
-
-        // terminate() {
-        //     worker.terminate();
-        // },
-
         addListener(name, listener) {
-            console.log('addListener', name, listener)
             listeners[name] = listener;
         },
-
         removeListener(name) {
             delete listeners[name];
+        },
+        notify(type, data) {
+            listeners[type](data);
         },
     };
 }
@@ -59,16 +52,16 @@ const SharedContext = createContext();
 const SharedProvider = ({ value, children }) => {
     console.log('Value for provider - instance worker', value);
 
-    const { worker, listeners, addListener, postMessage } = value;
+    const { worker, notify, addListener, postMessage } = value;
 
     useEffect(() => {
         worker.port.addEventListener(
             'message',
-            e => {
-                console.log('onmessage event data: ', e.data);
-                const { type, value } = JSON.parse(e.data);
+            event => {
+                console.log('I got the data from the worker', event.data);
+                const { type, value } = JSON.parse(event.data); // todo: improve
 
-                listeners[type](value);
+                notify(type, value)
             },
             false
         );
@@ -78,7 +71,6 @@ const SharedProvider = ({ value, children }) => {
         };
 
         worker.port.start();
-        // worker.port.postMessage("start");
 
         return () => {
             // worker.terminate()
@@ -113,7 +105,7 @@ const useSharedResource = (type, options = {}) => {
         return () => {};
     }, []);
 
-    const run = useCallback((data) => {
+    const run = useCallback(data => {
         postMessage(type, data);
     }, []);
 
@@ -127,7 +119,7 @@ const Test = () => {
 
     useEffect(() => {
         run();
-    }, [])
+    }, []);
 
     return (
         <div>
