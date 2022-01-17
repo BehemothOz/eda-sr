@@ -21,6 +21,7 @@ const serialize = action => {
     - add listener -> remove listener
 */
 
+
 function createSharedWorker() {
     const worker = new SharedWorker(getPathFromPublic('shared.worker.js'));
     const listeners = {};
@@ -112,6 +113,7 @@ const useSharedResource = (type, options = {}) => {
     const [state, setState] = useState(initialState);
 
     useEffect(() => {
+        console.log(`%c ADD LISTENER FROM USE EFFECT`, 'color: orange');
         addListener(type, data => {
             setState(data);
         });
@@ -125,28 +127,40 @@ const useSharedResource = (type, options = {}) => {
     return [state, run];
 };
 
+const RenderTest = ({ data, run }) => {
+    useEffect(() => {
+        console.log(`%c SET FROM USE EFFECT`, 'color: red');
+        run();
+    }, []);
+
+    return (
+        <ul>
+            {data.map((it, idx) => (
+                <li key={idx}>
+                    {it.info}::{it.count}
+                </li>
+            ))}
+        </ul>
+    );
+};
+
 const Test = () => {
     const [tasks, getTasks] = useSharedResource('GET_TASKS', { initialState: [] });
     const [_, createTask] = useSharedResource('CREATE_TASK');
 
+    // useEffect(() => {
+    //     console.log(`%c SET FROM USE EFFECT`, 'color: red');
+    //     getTasks();
+    // }, []);
+
     const onGetClick = () => getTasks();
     const onCreateClick = () => createTask({ count: 1000, info: 'love playing with dog tail' });
-
-    // useEffect(() => {
-    //     run();
-    // }, []);
 
     return (
         <div>
             <button onClick={onGetClick}>BTN FOR GET ALL</button>
             <button onClick={onCreateClick}>BTN FOR CREATE ONE</button>
-            <ul>
-                {tasks.map((it, idx) => (
-                    <li key={idx}>
-                        {it.info}::{it.count}
-                    </li>
-                ))}
-            </ul>
+            <RenderTest data={tasks} run={getTasks} />
         </div>
     );
 };
