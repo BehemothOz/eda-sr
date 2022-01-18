@@ -1,8 +1,9 @@
-import { useContext, useMemo, useEffect, createContext, useState, useCallback } from 'react';
+import { useContext, useMemo, useEffect, createContext, useState, useCallback, useReducer } from 'react';
 
 const getPathFromPublic = path => `${process.env.PUBLIC_URL}/${path}`;
 
 // const createAction = (type, value = '') => ({ type, value });
+
 const serialize = action => {
     try {
         return JSON.stringify(action);
@@ -11,7 +12,13 @@ const serialize = action => {
     }
 };
 
-// function noop() {}
+const parse = data => {
+    try {
+        return JSON.parse(data);
+    } catch (error) {
+        throw Error('Oops');
+    }
+};
 
 /*
     - initializing the worker (ex, 'init event')
@@ -21,13 +28,42 @@ const serialize = action => {
     - add listener -> remove listener
 */
 
+let createStore = initialValue => {
+    let listeners = new Set();
+    let store = {
+        value: initialValue,
+        set(newValue) {
+            console.log(`%c SET`, 'color: red');
+            store.value = newValue;
+            store.notify();
+        },
+        get() {
+            return store.value;
+        },
+        notify() {
+            console.log('notify', listeners);
+            listeners.forEach(listener => listener());
+        },
+        subscribe(listener) {
+            console.log(`%c add listen`, 'color: orange');
+
+            listeners.add(listener);
+            listener(store.value);
+
+            return () => {
+                listeners.delete(listener);
+            }
+        },
+    };
+
+    return store;
+};
 
 function createSharedWorker() {
     const worker = new SharedWorker(getPathFromPublic('shared.worker.js'));
-    const listeners = {};
+    const listeners = new Map();
 
-    // defaultListener = noop;
-    // if (onError) {worker.onerror = onError;}
+    const defaultListener = function() {};
 
     return {
         worker,
@@ -38,13 +74,19 @@ function createSharedWorker() {
         },
         addListener(type, listener) {
             console.log('I added listener by name', type);
-            listeners[type] = listener;
-        },
-        removeListener(name) {
-            delete listeners[name];
+
+            listeners.set(type, listener);
+            // listeners[type] = listener;
+
+            return () => {
+                listener.delete(type)
+            }
         },
         notify(type, data) {
-            listeners[type](data);
+            const listener = listeners.get(type);
+
+            if (listener) listener(data);
+            else defaultListener();
         },
     };
 }
@@ -106,31 +148,41 @@ const useShared = () => {
     return useContext(SharedContext);
 };
 
-const useSharedResource = (type, options = {}) => {
-    const { initialState = null } = options;
-    const { addListener, postMessage } = useShared();
 
-    const [state, setState] = useState(initialState);
+function useStore(store) {
+    const [, forceRender] = useReducer(c => c + 1, 0);
+    const { postMessage } = useShared();
+
+    console.log(`%c store.get(): ${store.get()}`, 'color: green');
 
     useEffect(() => {
-        console.log(`%c ADD LISTENER FROM USE EFFECT`, 'color: orange');
-        addListener(type, data => {
-            setState(data);
-        });
-        return () => {};
-    }, []);
+        console.log('useEffect from useStore');
+
+        const rerender = () => forceRender();
+        const unsub = store.subscribe(rerender);
+        return () => {
+            // unsub();
+        };
+    }, [store]);
 
     const run = useCallback(data => {
-        postMessage(type, data);
+        postMessage('GET_TASKS', data);
     }, []);
 
-    return [state, run];
-};
+    return [store.get(), run];
+}
+
+const instance = createSharedWorker();
+
+const state = createStore();
+const set = data => state.set(data);
+
+instance.addListener('GET_TASKS', set);
 
 const RenderTest = ({ data, run }) => {
     useEffect(() => {
         console.log(`%c SET FROM USE EFFECT`, 'color: red');
-        run();
+        // run();
     }, []);
 
     return (
@@ -145,8 +197,11 @@ const RenderTest = ({ data, run }) => {
 };
 
 const Test = () => {
-    const [tasks, getTasks] = useSharedResource('GET_TASKS', { initialState: [] });
-    const [_, createTask] = useSharedResource('CREATE_TASK');
+    // const [tasks, getTasks] = useSharedResource('GET_TASKS', { initialState: [] });
+    // const [_, createTask] = useSharedResource('CREATE_TASK');
+
+    const [val, getTasks] = useStore(state);
+    console.log(val)
 
     // useEffect(() => {
     //     console.log(`%c SET FROM USE EFFECT`, 'color: red');
@@ -154,18 +209,17 @@ const Test = () => {
     // }, []);
 
     const onGetClick = () => getTasks();
-    const onCreateClick = () => createTask({ count: 1000, info: 'love playing with dog tail' });
+    // const onCreateClick = () => createTask({ count: 1000, info: 'love playing with dog tail' });
 
     return (
         <div>
             <button onClick={onGetClick}>BTN FOR GET ALL</button>
-            <button onClick={onCreateClick}>BTN FOR CREATE ONE</button>
-            <RenderTest data={tasks} run={getTasks} />
+            {/* <button onClick={onCreateClick}>BTN FOR CREATE ONE</button> */}
+            {/* <RenderTest data={tasks} run={getTasks} /> */}
+            asd
         </div>
     );
 };
-
-const instance = createSharedWorker();
 
 export const TestPage = () => {
     return (

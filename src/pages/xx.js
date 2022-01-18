@@ -45,3 +45,25 @@ function useStore(store) {
 
     return store.get();
 }
+
+
+const useSharedResource = (type, options = {}) => {
+    const { initialState = null } = options;
+    const { addListener, postMessage } = useShared();
+
+    const [state, setState] = useState(initialState);
+
+    useEffect(() => {
+        console.log(`%c ADD LISTENER FROM USE EFFECT`, 'color: orange');
+        addListener(type, data => {
+            setState(data);
+        });
+        return () => {};
+    }, []);
+
+    const run = useCallback(data => {
+        postMessage(type, data);
+    }, []);
+
+    return [state, run];
+};

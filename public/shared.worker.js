@@ -18,7 +18,7 @@ class Data {
 class Tasks {
     constructor() {
         // this.tasks = initialTasks;
-        this.tasks = [];
+        this.tasks = [{ msg: 'Мармышка' }];
         this.count = 1; // temp
     }
 
