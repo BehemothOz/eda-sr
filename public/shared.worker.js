@@ -49,31 +49,49 @@ class Tasks {
     }
 }
 
-const tasks = new Tasks();
+// const tasks = new Tasks();
 
 /*
     chrome://inspect/#workers
     help: https://stackoverflow.com/questions/2323778/how-to-debug-web-workers
 */
 
+// self.addEventListener('connect', function (e) {
+//     const port = e.ports[0];
+
+//     port.onmessage = function (event) {
+//         const { type, value } = JSON.parse(event.data);
+
+//         switch (type) {
+//             case 'GET_TASKS': {
+//                 port.postMessage(JSON.stringify({ type, value: tasks.getAll() }));
+//                 break;
+//             }
+//             case 'CREATE_TASK':
+//                 port.postMessage(JSON.stringify({ type, value: tasks.create(value) }));
+//                 break;
+
+//             default:
+//                 port.postMessage('OOOPPPPSSS');
+//                 break;
+//         }
+//     };
+// });
+
+const connections = [];
+let count = 0;
+
 self.addEventListener('connect', function (e) {
     const port = e.ports[0];
+    connections.push(port);
 
-    port.onmessage = function (event) {
-        const { type, value } = JSON.parse(event.data);
-
-        switch (type) {
-            case 'GET_TASKS': {
-                port.postMessage(JSON.stringify({ type, value: tasks.getAll() }));
-                break;
-            }
-            case 'CREATE_TASK':
-                port.postMessage(JSON.stringify({ type, value: tasks.create(value) }));
-                break;
-
-            default:
-                port.postMessage('OOOPPPPSSS');
-                break;
+    port.onmessage = function () {
+        console.log(1)
+        count++;
+        
+        for (let connection of connections) {
+            // connection.postMessage([`counter is ${count}`]);
+            connection.postMessage([`counter is ${x}`]);
         }
     };
 });
