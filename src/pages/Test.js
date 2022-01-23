@@ -8,6 +8,13 @@ function onError(e) {
     console.log('Message: ' + e.message);
 }
 
+/*
+    Для слабого связывания кода
+*/
+const emitter = () => {
+    // todo
+}
+
 export const TestPage = () => {
     const ref = useRef();
 
