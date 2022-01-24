@@ -12,8 +12,44 @@ function onError(e) {
     Для слабого связывания кода
 */
 const emitter = () => {
-    // todo
-}
+    const events = new Map(); // or new WeakMap?
+
+    return {
+        on: (name, listener) => {
+            const event = events.get(name);
+
+            if (event) event.push(listener);
+            else events.set(name, [listener]);
+        },
+        once: () => {},
+        emit: name => {
+            if (!events.has(name)) return;
+            events.get(name).forEach(listener => listener());
+        },
+        remove: (name, listener) => {
+            const event = events.get(name);
+            if (!event) return;
+
+            const idx = event.indexOf(listener); // indexOf | findIndex
+            if (idx !== -1) event.splice(idx, 1); // mutation
+        },
+        listeners: name => {
+            const event = events.get(name); // copy
+            if (event) return event.slice();
+        },
+        /*
+        Clear by name or all clear
+      */
+        clear: name => {
+            if (name) events.delete(name);
+            else events.clear();
+        },
+        names: () => {
+            return Array.from(events.keys());
+        },
+        size: () => events.size,
+    };
+};
 
 export const TestPage = () => {
     const ref = useRef();
