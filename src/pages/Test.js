@@ -11,35 +11,44 @@ function onError(e) {
 /*
     Для слабого связывания кода
 */
-const emitter = () => {
+const eventEmitter = () => {
     const events = new Map(); // or new WeakMap?
 
-    return {
+    const emitter = {
         on: (name, listener) => {
             const event = events.get(name);
 
-            if (event) event.push(listener);
-            else events.set(name, [listener]);
+            if (event) event.add(listener);
+            else events.set(name, new Set([listener]));
         },
-        once: () => {},
-        emit: name => {
-            if (!events.has(name)) return;
-            events.get(name).forEach(listener => listener());
+        once: (name, listener) => {
+            const onceListener = (...args) => {
+                emitter.remove(name, onceListener);
+                listener(...args);
+            };
+
+            emitter.on(name, onceListener);
+        },
+        emit: (name, ...args) => {
+            const event = events.get(name);
+            if (!event) return;
+
+            Array.from(event).forEach(listener => {
+                listener(...args);
+            });
         },
         remove: (name, listener) => {
             const event = events.get(name);
             if (!event) return;
-
-            const idx = event.indexOf(listener); // indexOf | findIndex
-            if (idx !== -1) event.splice(idx, 1); // mutation
+            if (event.has(listener)) event.delete(listener);
         },
         listeners: name => {
-            const event = events.get(name); // copy
-            if (event) return event.slice();
+            const event = events.get(name);
+            if (event) return Array.from(event);
         },
         /*
-        Clear by name or all clear
-      */
+            Clear by name or all clear
+        */
         clear: name => {
             if (name) events.delete(name);
             else events.clear();
@@ -49,7 +58,11 @@ const emitter = () => {
         },
         size: () => events.size,
     };
+
+    return emitter;
 };
+
+eventEmitter(); // bb
 
 export const TestPage = () => {
     const ref = useRef();
