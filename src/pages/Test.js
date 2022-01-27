@@ -81,7 +81,10 @@ const createWorker = link => {
         emitter.emit(name, data);
     };
 
-    return { port: worker.port, postMessage, onMessage };
+    return { port: worker.port, postMessage, onMessage, ter: () => {
+        console.log(worker)
+        worker.terminate();
+    } };
 };
 
 const instance = createWorker('shared.worker.js');
@@ -99,7 +102,8 @@ export const TestPage = () => {
         shwr.port.start();
 
         return () => {
-            shwr.port.terminate();
+            // shwr.port.terminate(); // only D Worker
+            shwr.port.close();
         };
     }, []);
 
