@@ -86,12 +86,15 @@ self.addEventListener('connect', function (e) {
     connections.push(port);
 
     port.onmessage = function () {
-        console.log(1)
+        console.log(1, 'connection.length', connections.length)
         count++;
         
-        for (let connection of connections) {
-            // connection.postMessage([`counter is ${count}`]);
-            connection.postMessage([`counter is ${x}`]);
-        }
+        // for (let connection of connections) {
+        //     // connection.postMessage([`counter is ${count}`]);
+        //     // connection.postMessage([`counter is ${x}`]);
+        //     connection.postMessage(['orbit', 10]);
+        // }
+
+        port.postMessage(['orbit', 10])
     };
 });

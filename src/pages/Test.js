@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 const getPathFromPublic = path => `${process.env.PUBLIC_URL}/${path}`;
 
@@ -62,36 +62,57 @@ const eventEmitter = () => {
     return emitter;
 };
 
-eventEmitter(); // bb
+const createWorker = link => {
+    const emitter = eventEmitter();
+    const worker = new SharedWorker(getPathFromPublic(link));
+
+    const postMessage = (name, data) => {
+        return new Promise(resolve => {
+            emitter.once(name, res => {
+                resolve(res);
+            });
+
+            worker.port.postMessage(name, data);
+        });
+    };
+
+    const onMessage = evt => {
+        const [name, data] = evt.data;
+        emitter.emit(name, data);
+    };
+
+    return { port: worker.port, postMessage, onMessage };
+};
+
+const instance = createWorker('shared.worker.js');
 
 export const TestPage = () => {
-    const ref = useRef();
+    const shwr = instance;
+
+    const [state, setState] = useState(0);
 
     useEffect(() => {
-        const worker = new SharedWorker(getPathFromPublic('shared.worker.js'));
-        ref.current = worker;
+        shwr.port.addEventListener('message', shwr.onMessage);
 
-        worker.port.addEventListener('message', event => {
-            console.log('I got the data from the worker', event.data);
-        });
+        shwr.port.addEventListener('error', onError);
 
-        worker.addEventListener('error', onError, false);
-        worker.port.addEventListener('error', onError, false);
-
-        worker.port.start();
+        shwr.port.start();
 
         return () => {
-            worker.terminate();
+            shwr.port.terminate();
         };
     }, []);
 
     const onGetClick = () => {
-        ref.current?.port.postMessage('some');
+        shwr.postMessage('orbit').then(res => {
+            console.log('then result', res);
+            setState(prev => res + prev);
+        });
     };
 
     return (
         <div>
-            <button onClick={onGetClick}>BTN</button>
+            <button onClick={onGetClick}>BTN</button> | {state}
         </div>
     );
 };
