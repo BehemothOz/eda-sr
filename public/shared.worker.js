@@ -85,6 +85,9 @@ self.addEventListener('connect', function (e) {
     const port = e.ports[0];
     connections.push(port);
 
+    console.log(e)
+    console.log('connections', connections)
+
     port.onmessage = function () {
         console.log(1, 'connection.length', connections.length)
         count++;
