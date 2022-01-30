@@ -1,91 +1,87 @@
-class Data {
-    constructor() {
-        this.data = [];
+/*
+    chrome://inspect/#workers
+    help: https://stackoverflow.com/questions/2323778/how-to-debug-web-workers - debug Worker
+
+    https://habr.com/ru/post/261307/ - about Worker
+
+    https://html.spec.whatwg.org/dev/workers.html#shared-workers-introduction - spec Worker
+*/
+
+class Count {
+    constructor(number) {
+        this.count = 0;
+        this.number = number;
+    }
+
+    inc() {
+        this.count = this.count + this.number;
+        return this;
     }
 
     get() {
-        return this.data;
-    }
-    add(value) {
-        const id = this.data.length + 1;
-        this.data.push({ id, ...value });
-        return this.data;
-    }
-    update() {}
-    remove() {}
-}
-
-class Tasks {
-    constructor() {
-        // this.tasks = initialTasks;
-        this.tasks = [{ msg: 'Мармышка' }];
-        this.count = 1; // temp
-    }
-
-    getAll() {
-        return this.tasks;
-        // throw new Error('Ooops')
-    }
-
-    getByID() {}
-
-    create(data) {
-        // const id = generateID.get();
-        const id = this.count;
-        this.tasks = [...this.tasks, { id, ...data }];
-        this.count++;
-        return id;
-        // throw new Error('Ooops')
-    }
-
-    update(id, data) {
-        this.tasks = this.tasks.map(task => (task.id === id ? { ...task, ...data } : task));
-        return id;
-    }
-
-    delete(id) {
-        this.tasks = this.tasks.filter(task => task.id !== id);
-        return id;
+        return this.count;
     }
 }
 
-/*
-    chrome://inspect/#workers
-    help: https://stackoverflow.com/questions/2323778/how-to-debug-web-workers
+class Banana extends Count {}
+class Apple extends Count {}
 
-    https://habr.com/ru/post/261307/
-
-    https://html.spec.whatwg.org/dev/workers.html#shared-workers-introduction
-*/
+const banana = new Banana(10);
+const apple = new Apple(100);
 
 let connections = [];
-let count = 0;
 
 self.addEventListener('connect', function (e) {
     const port = e.ports[0];
     connections.push(port);
 
-    console.log(e)
-    console.log('connections', connections)
+    console.log('connections', connections); // for debug;
 
-    port.onmessage = function (e) {
-        console.log('msg e', e)
-        console.log(1, 'connection.length', connections.length)
-        count++;
+    port.onmessage = function (event) {
+        const [name] = event.data;
+        console.log(event.data);
 
-        if (e.data[0] === 'close') {
-            console.log(111)
-            connections = connections.filter(el => el !== e.target);
-            e.target.close();
+        let message;
+
+        if (name === 'CLOSE') {
+            const currentPort = event.target;
+            connections = connections.filter(connection => connection !== currentPort);
+            currentPort.close();   
             return;
         }
 
-        port.postMessage(['orbit', 10]);
+        switch (name) {
+            case 'GET_BANANA': {
+                const count = banana.get();
+                message = [name, count];
+                break;
+            }
+            case 'ADD_BANANA': {
+                const count = banana.inc().get();
+                message = [name, count];
+                break;
+            }
+            case 'GET_APPLE': {
+                const count = apple.get();
+                message = [name, count];
+                break;
+            }
+            case 'ADD_APPLE': {
+                const count = apple.inc().get();
+                message = [name, count];
+                break;
+            }
+            default:
+                console.log('name is not found');
+                break;
+        }
+
+        notify(message);
     };
 });
 
-function notify () {
+function notify(message) {
     for (let connection of connections) {
-        connection.postMessage(['orbit', 10]);
+        connection.postMessage(message);
     }
 }
