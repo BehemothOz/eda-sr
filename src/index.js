@@ -5,6 +5,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { Grow } from '@mui/material';
 import { AuthProvider } from 'providers/AuthProvider';
+import { SharedProvider } from 'providers/SharedProvider';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -20,9 +21,11 @@ ReactDOM.render(
                 TransitionComponent={Grow}
                 anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
             >
-                <AuthProvider>
-                    <App />
-                </AuthProvider>
+                <SharedProvider>
+                    <AuthProvider>
+                        <App />
+                    </AuthProvider>
+                </SharedProvider>
             </SnackbarProvider>
         </LocalizationProvider>
     </React.StrictMode>,
