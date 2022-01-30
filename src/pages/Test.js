@@ -95,6 +95,16 @@ export const TestPage = () => {
     const [state, setState] = useState(0);
 
     useEffect(() => {
+        const fn = () =>  shwr.postMessage(['close']);
+
+        window.addEventListener("beforeunload", fn);
+
+        return () => {
+            window.removeEventListener("beforeunload", fn);
+        }
+    }, [])
+
+    useEffect(() => {
         shwr.port.addEventListener('message', shwr.onMessage);
 
         shwr.port.addEventListener('error', onError);
@@ -103,7 +113,8 @@ export const TestPage = () => {
 
         return () => {
             // shwr.port.terminate(); // only D Worker
-            shwr.port.close();
+            // shwr.port.close();
+            shwr.postMessage(['close']);
         };
     }, []);
 
@@ -114,9 +125,15 @@ export const TestPage = () => {
         });
     };
 
+    const onClose = () => {
+        shwr.postMessage(['close']);
+    }
+
     return (
         <div>
             <button onClick={onGetClick}>BTN</button> | {state}
+            <div></div>
+            <button onClick={onClose}>CLOSE</button>
         </div>
     );
 };

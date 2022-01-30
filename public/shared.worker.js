@@ -49,36 +49,16 @@ class Tasks {
     }
 }
 
-// const tasks = new Tasks();
-
 /*
     chrome://inspect/#workers
     help: https://stackoverflow.com/questions/2323778/how-to-debug-web-workers
+
+    https://habr.com/ru/post/261307/
+
+    https://html.spec.whatwg.org/dev/workers.html#shared-workers-introduction
 */
 
-// self.addEventListener('connect', function (e) {
-//     const port = e.ports[0];
-
-//     port.onmessage = function (event) {
-//         const { type, value } = JSON.parse(event.data);
-
-//         switch (type) {
-//             case 'GET_TASKS': {
-//                 port.postMessage(JSON.stringify({ type, value: tasks.getAll() }));
-//                 break;
-//             }
-//             case 'CREATE_TASK':
-//                 port.postMessage(JSON.stringify({ type, value: tasks.create(value) }));
-//                 break;
-
-//             default:
-//                 port.postMessage('OOOPPPPSSS');
-//                 break;
-//         }
-//     };
-// });
-
-const connections = [];
+let connections = [];
 let count = 0;
 
 self.addEventListener('connect', function (e) {
@@ -88,16 +68,24 @@ self.addEventListener('connect', function (e) {
     console.log(e)
     console.log('connections', connections)
 
-    port.onmessage = function () {
+    port.onmessage = function (e) {
+        console.log('msg e', e)
         console.log(1, 'connection.length', connections.length)
         count++;
-        
-        // for (let connection of connections) {
-        //     // connection.postMessage([`counter is ${count}`]);
-        //     // connection.postMessage([`counter is ${x}`]);
-        //     connection.postMessage(['orbit', 10]);
-        // }
 
-        port.postMessage(['orbit', 10])
+        if (e.data[0] === 'close') {
+            console.log(111)
+            connections = connections.filter(el => el !== e.target);
+            e.target.close();
+            return;
+        }
+
+        port.postMessage(['orbit', 10]);
     };
 });
+
+function notify () {
+    for (let connection of connections) {
+        connection.postMessage(['orbit', 10]);
+    }
+}
