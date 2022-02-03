@@ -1,17 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { addBanana } from '../__worker';
 
 const BananaPage = () => {
+    const [val, set] = useState(0)
+
     useEffect(() => {
         // get entity
     }, [])
 
     const handleClick = () => {
-        // add entity
+        addBanana('love').then(r => set(r));
     };
 
     return (
         <>
-            <button onClick={handleClick}>ADD BTN</button> banana: 0
+            <button onClick={handleClick}>ADD BTN</button> banana: {val}
         </>
     );
 };

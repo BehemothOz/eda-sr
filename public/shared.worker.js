@@ -9,7 +9,7 @@
 
 class Count {
     constructor(number) {
-        this.count = 0;
+        this.count = 10;
         this.number = number;
     }
 
@@ -51,6 +51,16 @@ self.addEventListener('connect', function (e) {
         }
 
         switch (name) {
+            case 'get::banana': {
+                const count = banana.get();
+                message = [name, count];
+                break;
+            }
+            case 'add::banana': {
+                const count = banana.inc().get();
+                message = [name, count];
+                break;
+            }
             case 'GET_BANANA': {
                 const count = banana.get();
                 message = [name, count];
