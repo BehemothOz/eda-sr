@@ -1,45 +1,33 @@
-import { useStateShared, usePostMessage } from 'providers/SharedProvider';
 import { useEffect } from 'react';
 
-const useStore = prop => {
-    const store = useStateShared();
-    return store[prop];
-};
-
 const BananaPage = () => {
-    const value = useStore('banana');
-    const postMessage = usePostMessage();
-
     useEffect(() => {
-        postMessage('GET_BANANA');
+        // get entity
     }, [])
 
     const handleClick = () => {
-        postMessage('ADD_BANANA');
+        // add entity
     };
 
     return (
         <>
-            <button onClick={handleClick}>ADD BTN</button> banana: {value}
+            <button onClick={handleClick}>ADD BTN</button> banana: 0
         </>
     );
 };
 
 const ApplePage = () => {
-    const value = useStore('apple');
-    const postMessage = usePostMessage();
-
     useEffect(() => {
-        postMessage('GET_APPLE');
+        // get entity
     }, [])
 
     const handleClick = () => {
-        postMessage('ADD_APPLE');
+        // add entity
     };
 
     return (
         <>
-            <button onClick={handleClick}>BTN</button> apple: {value}
+            <button onClick={handleClick}>BTN</button> apple: 0
         </>
     );
 };
