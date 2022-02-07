@@ -1,3 +1,9 @@
+/*
+    == Not used ==
+
+    Different ideas.
+*/
+
 import { eventEmitter } from '_drafts/emitter';
 
 const getPathFromPublic = path => `${process.env.PUBLIC_URL}/${path}`;
@@ -26,3 +32,15 @@ export const createWorker = link => {
 
     return { port: worker.port, register, postMessage, onMessage };
 };
+
+/*
+    For example:
+    shwr.register(event, callback);
+    shwr.postMessage(event) -> emit(event) -> call event::callback()
+*/
+
+/*
+    Event -> close current port
+    window.addEventListener('beforeunload', () => {});
+    window.removeEventListener('beforeunload', () => {});
+*/
