@@ -7,29 +7,144 @@
     https://html.spec.whatwg.org/dev/workers.html#shared-workers-introduction - spec Worker
 */
 
-class Count {
-    constructor(number) {
-        this.count = 10;
-        this.number = number;
+/*
+    TODO: importScript
+*/
+
+class Users {
+    constructor() {
+        this.users = new Map([
+            [
+                '000-S',
+                {
+                    id: '000-S',
+                    login: 'sss',
+                    firstName: 'sss',
+                    middleName: '',
+                    lastName: '',
+                    secretQuestion: 1,
+                    secretAnswer: 'sss',
+                },
+            ],
+        ]);
+
+        this.userID = 1;
     }
 
-    inc() {
-        this.count = this.count + this.number;
-        return this;
+    register(data) {
+        const id = this.userID++;
+
+        this.users.set(id, { id, ...data });
+        return id;
     }
 
-    get() {
-        return this.count;
+    checkByLogin({ login }) {
+        const user = this._find(([_, user]) => user.login === login);
+
+        if (!user) {
+            throw new Error('Invalid login or password');
+        }
+
+        const [userID] = user;
+        return userID;
+    }
+
+    checkBySecret({ login, secretAnswer }) {
+        const user = this._find(([_, user]) => user.login === login && user.secretAnswer === secretAnswer);
+
+        if (!user) {
+            throw new Error('Try again');
+        }
+
+        const [userID] = user;
+        return userID;
+    }
+
+    get(userID) {
+        const user = this.users.get(userID);
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return user;
+    }
+
+    getToVerify(userID) {
+        const user = this.users.get(userID);
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        const res = {
+            id: user.id,
+            login: user.login,
+            secretQuestion: user.secretQuestion,
+        };
+
+        return res;
+    }
+
+    update(userID, data) {
+        this.users.set(userID, { id: userID, ...data });
+        return userID;
+    }
+
+    _find(cb) {
+        return Array.from(this.users.entries()).find(cb);
+    }
+
+    getAll() {
+        return Array.from(this.users);
     }
 }
 
-class Banana extends Count {}
-class Apple extends Count {}
+class Tasks {
+    constructor() {
+        this.tasks = [
+            {
+                id: 1,
+                title: 'Cook pasta with chicken',
+                type: '',
+                plannedStartTime: new Date(2021, 9, 1),
+                plannedEndTime: new Date(2021, 9, 25),
+                actualStartTime: null,
+                actualEndTime: null,
+            },
+        ];
 
-const banana = new Banana(10);
-const apple = new Apple(100);
+        this.taskID = 2;
+    }
+
+    getAll() {
+        return this.tasks;
+    }
+
+    create(data) {
+        const id = this.taskID++;
+        this.tasks = [...this.tasks, { id, ...data }];
+
+        return id;
+    }
+
+    update(id, data) {
+        this.tasks = this.tasks.map(task => (task.id === id ? { ...task, ...data } : task));
+        return id;
+    }
+
+    delete(id) {
+        this.tasks = this.tasks.filter(task => task.id !== id);
+        return id;
+    }
+}
+
+const usersService = new Users();
+const tasksService = new Tasks();
 
 let connections = [];
+
+const formatSuccessMessage = formatMessage('OK');
+const formatErrorMessage = formatMessage('ERROR');
 
 self.addEventListener('connect', function (e) {
     const port = e.ports[0];
@@ -38,60 +153,107 @@ self.addEventListener('connect', function (e) {
     console.log('connections', connections); // for debug;
 
     port.onmessage = function (event) {
-        const [name] = event.data;
-        console.log(event.data);
+        const [messageID, incomingMessage] = event.data;
+        const { key, payload } = incomingMessage;
 
         let message;
 
-        if (name === 'CLOSE') {
-            const currentPort = event.target;
-            connections = connections.filter(connection => connection !== currentPort);
-            currentPort.close();   
-            return;
-        }
+        switch (key) {
+            /*
+                User cases
+            */
+            case 'auth:user': {
+                try {
+                    const userID = usersService.checkByLogin(payload);
+                    message = formatSuccessMessage(key, userID);
+                } catch (error) {
+                    message = formatErrorMessage(key, error);
+                }
+                break;
+            }
+            case 'register:user': {
+                const userID = usersService.register(payload);
+                message = formatSuccessMessage(key, userID);
+                break;
+            }
+            case 'get:user': {
+                const user = usersService.get(payload);
+                message = formatSuccessMessage(key, user);
+                break;
+            }
+            case 'verify:user': {
+                try {
+                    const res = usersService.getToVerify(payload);
+                    message = formatSuccessMessage(key, res);
+                } catch (error) {
+                    message = formatErrorMessage(key, error);
+                }
+                break;
+            }
+            case 'check_secret:user': {
+                try {
+                    const userID = usersService.checkBySecret(payload);
+                    message = formatSuccessMessage(key, userID);
+                } catch (error) {
+                    message = formatErrorMessage(key, error);
+                }
+                break;
+            }
+            case 'update:user': {
+                const { id: updatedID, value } = payload;
 
-        switch (name) {
-            case 'get::banana': {
-                const count = banana.get();
-                message = [name, count];
+                const userID = usersService.update(updatedID, value);
+                message = formatSuccessMessage(key, userID);
                 break;
             }
-            case 'add::banana': {
-                const count = banana.inc().get();
-                message = [name, count];
+            case 'check:user': {
+                try {
+                    const userID = usersService.checkByLogin(payload);
+                    message = formatSuccessMessage(key, userID);
+                } catch (error) {
+                    message = formatErrorMessage(key, error);
+                }
                 break;
             }
-            case 'GET_BANANA': {
-                const count = banana.get();
-                message = [name, count];
+
+            /*
+                Tasks cases
+            */
+            case 'get:tasks': {
+                const tasks = tasksService.getAll();
+                message = formatSuccessMessage(key, tasks);
                 break;
             }
-            case 'ADD_BANANA': {
-                const count = banana.inc().get();
-                message = [name, count];
+            case 'create:task': {
+                const id = tasksService.create(payload);
+                message = formatSuccessMessage(key, id);
                 break;
             }
-            case 'GET_APPLE': {
-                const count = apple.get();
-                message = [name, count];
+            case 'update:task': {
+                const { id: updatedID, value } = payload;
+
+                const id = tasksService.update(updatedID, value);
+                message = formatSuccessMessage(key, id);
                 break;
             }
-            case 'ADD_APPLE': {
-                const count = apple.inc().get();
-                message = [name, count];
+            case 'delete:task': {
+                const { id: removedID } = payload;
+
+                const id = tasksService.delete(removedID);
+                message = formatSuccessMessage(key, id);
                 break;
             }
             default:
-                console.log('name is not found');
+                message = formatErrorMessage(new Error('Key is not found'));
                 break;
         }
 
-        notify(message);
+        port.postMessage([messageID, message]);
     };
 });
 
-function notify(message) {
-    for (let connection of connections) {
-        connection.postMessage(message);
-    }
+function formatMessage(status) {
+    return (key, data) => {
+        return { key, status, data };
+    };
 }

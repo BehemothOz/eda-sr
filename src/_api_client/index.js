@@ -1,11 +1,8 @@
-import { SharedWorkerClient, getPathFromPublic } from 'worker';
+import { delayWithRequest, delayWithTimeoutRequest } from './request';
 
-const PATH_WORKER = getPathFromPublic('shared.worker.js');
-
-const sharedWorker = new SharedWorker(getPathFromPublic(PATH_WORKER));
-const wr = new SharedWorkerClient(sharedWorker);
-
-console.log(wr);
+import { sessionService } from './services/session';
+import { usersService } from './services/users';
+import { tasksService } from './services/tasks';
 
 const auth = async data => {
     return await delayWithTimeoutRequest(0, () => usersService.checkByLogin(data)).then(userID =>
